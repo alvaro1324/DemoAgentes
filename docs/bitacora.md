@@ -1,0 +1,69 @@
+# Bitácora del proyecto DemoAgentes
+
+Historial único del trabajo, las decisiones y las comprobaciones del proyecto. Las entradas iniciales se han reconstruido a partir de esta conversación el 24 de noviembre de 2026, sin atribuir horas no registradas. Las siguientes entradas se añadirán al final de este mismo archivo.
+
+## 24 de noviembre de 2026
+
+### 1. Definición inicial e instrucciones del proyecto
+
+- Se partió de una carpeta vacía en `D:\Sourcetree\DemoAgentes`.
+- El usuario indicó PHP, Symfony, Doctrine, Angular y pruebas automatizadas como base tecnológica de una aplicación de lista de tareas.
+- Se creó `AGENTS.md` con instrucciones de desarrollo, estrategia de pruebas y una lista inicial de tareas.
+- Se propuso un MVP con creación, consulta, edición, finalización, eliminación y filtrado de tareas, junto con una entidad `Task` y las carpetas `backend/`, `frontend/` y `docs/`.
+- El detalle del MVP, el modelo y la estructura son propuestas documentadas; todavía no se ha implementado la aplicación ni se han elegido versiones o base de datos.
+
+### 2. Corrección del significado del candado
+
+- El usuario aclaró que el candado de la pizarra representa `CLAUDE.md` y el diseño/CLOT que define en qué consiste el proyecto.
+- Se corrigió `AGENTS.md` y se retiró la interpretación inicial que relacionaba el símbolo con autenticación y autorización.
+- Se añadió la tarea de incorporar o referenciar ese diseño/CLOT en `CLAUDE.md` y alinear las instrucciones con él. Ese archivo todavía no se ha creado.
+
+### 3. Primera pauta de documentación
+
+- El usuario pidió conservar lo aprendido en la carpeta `docs/`.
+- Se creó la carpeta y se añadió una pauta a `AGENTS.md`.
+- La pauta se interpretó como documentación bajo petición expresa. Como resultado, la carpeta quedó vacía; esta interpretación se corrige en la entrada 7.
+
+### 4. Inicialización del repositorio Git local
+
+- A petición del usuario se inicializó el repositorio con `git init -b main`.
+- Se comprobó el estado con `git status --short --branch` y la ausencia de remotos con `git remote -v`.
+- El repositorio quedó en la rama `main`, sin commits ni remoto configurado.
+
+### 5. Skill local para mensajes de commit
+
+- Se creó `.agents/skills/commit-messages/SKILL.md`, limitado a este proyecto, y se añadió su referencia a `AGENTS.md`.
+- El skill exige describir cambios concretos, utilizar el resumen `tipo: descripción corta` y añadir un cuerpo solo cuando aporte detalle útil. Los mensajes se redactan en español.
+- Se estableció que el mensaje debe basarse en los cambios reales que entren en el commit. Redactarlo no autoriza por sí mismo a ejecutar un commit ni hacer push.
+- Se consultó la documentación oficial de OpenAI para confirmar la ubicación local `.agents/skills/`.
+- El validador `quick_validate.py` terminó con `Skill is valid!`. Para ejecutarlo se instaló PyYAML en una carpeta temporal fuera del repositorio, tras detectar que faltaba esa dependencia.
+- No se realizó ningún commit.
+
+### 6. Elección de GitHub para tareas y revisión
+
+- El usuario decidió utilizar GitHub en lugar de Jira.
+- Se actualizó `AGENTS.md`: GitHub Issues para las tareas, PR en GitHub para las revisiones y GitHub como destino del futuro repositorio remoto. MCP quedó como integración opcional.
+- Se comprobó que no quedaran referencias a Jira en los archivos del proyecto y se ejecutó `git diff --check` sin errores.
+- La configuración del remoto sigue pendiente; el trabajo continúa en local.
+
+### 7. Bitácora única y actualización continua
+
+- El usuario aclaró que necesita un único fichero de historial en `docs/` y señaló que todavía no se había guardado documentación allí.
+- Se creó `docs/bitacora.md` con el historial anterior y se corrigió `AGENTS.md` para exigir su actualización automática con cada avance relevante, sin esperar otra petición.
+- Las correcciones futuras se registrarán mediante nuevas entradas, conservando el historial previo.
+- Comprobaciones: lectura del archivo creado, revisión de la pauta en `AGENTS.md` y verificación de espacios con `git diff --no-index --check` frente a un archivo vacío para ambos documentos.
+- Estado actual: instrucciones y skill creados; aplicación sin inicializar; sin commits en `main`. Pendientes principales: incorporar el diseño/CLOT, concretar el MVP y elegir versiones, base de datos y herramientas de pruebas.
+
+### 8. Verificación del skill en este chat
+
+- El usuario pidió comprobar si `commit-messages` está cargado en esta conversación.
+- Se confirmó que su nombre, descripción y ruta aparecen en el catálogo de skills disponibles de este chat.
+- Se leyó correctamente `.agents/skills/commit-messages/SKILL.md`, por lo que sus instrucciones completas están también disponibles en el contexto de esta comprobación.
+- El skill puede invocarse como `$commit-messages` y se utilizará al preparar mensajes de commit conforme a `AGENTS.md`. Esta comprobación no ejecutó ningún commit.
+
+### 9. Preparación del primer commit local
+
+- El usuario autorizó crear el commit.
+- Se revisaron los tres archivos que se incluirán: `AGENTS.md`, `.agents/skills/commit-messages/SKILL.md` y `docs/bitacora.md`. No hay código de aplicación ni pruebas ejecutables todavía.
+- Se aplicó el skill `commit-messages` para redactar el resumen: `docs: añadir pautas del proyecto, bitácora y skill de commits`.
+- El commit se prepara en `main`, con alcance local y sin push. Su creación se comprobará con el último registro de Git y el estado del árbol de trabajo.

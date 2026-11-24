@@ -13,9 +13,9 @@ Versiones comprobadas: PHP 8.4.28, Symfony FrameworkBundle 7.4.23 LTS, Doctrine 
 - Carpeta: `D:\Sourcetree\DemoAgentes`; Windows y PowerShell.
 - GitHub privado: <https://github.com/alvaro1324/DemoAgentes>, remoto `origin`.
 - Rama: `main`, con seguimiento de `origin/main`.
-- Último commit local al preparar esta versión: `a3baa52`, handoff inicial, pendiente de push.
+- Último commit local comprobado: `229eb8c`, `feat: crear versión 0.1 de tareas con Symfony y Angular`, pendiente de push junto con el handoff anterior.
 - Último commit remoto comprobado: `9406ca4`, skill de bitácora y configuración de GitHub.
-- El usuario ha solicitado crear un commit con todo el trabajo acumulado: aplicación 0.1, aprobación documental, scripts, documentación y skills locales. El hash resultante debe comprobarse en Git; no se ha solicitado un nuevo push, etiqueta ni release.
+- El commit de todo el trabajo acumulado se completó en `229eb8c`: aplicación 0.1, aprobación documental, scripts, documentación y skills locales. No se ha realizado un nuevo push, etiqueta ni release. El skill `modelo` y su documentación se añadieron después y siguen pendientes de commit.
 - El commit solicitado incluye también los cuatro skills locales adicionales (`docx`, `pdf`, `pptx`, `xlsx`) y los documentos antiguos que estaban sin versionar. Se conservan como aportaciones existentes; versionarlos no convierte sus referencias a otros stacks o dominios en requisitos de esta aplicación.
 
 Contrastar siempre estas referencias con Git al retomar. Las peticiones anteriores de commit y push ya finalizaron; no autorizan publicaciones nuevas.
@@ -35,6 +35,8 @@ Contrastar siempre estas referencias con Git al retomar. Las peticiones anterior
 | `.github/workflows/ci.yml` | Comprobaciones de GitHub Actions; ejecución remota pendiente |
 
 Usar `project-log` desde `.agents/skills/project-log/SKILL.md` para recuperar contexto y mantener la bitácora. Usar `commit-messages` desde `.agents/skills/commit-messages/SKILL.md` al preparar mensajes de commit.
+
+Para crear o actualizar entidades, campos, relaciones e invariantes, usar `$modelo`, definido en `.agents/skills/modelo/SKILL.md`. Se creó a partir del README, análisis, decisiones de la 0.1, código actual y documentos de orquestación. Su integración específica de DemoAgentes está documentada al principio de `docs/skills-orquestacion-v2.md`; el resto de ese documento conserva ejemplos de otro proyecto.
 
 ## Arranque y verificación
 

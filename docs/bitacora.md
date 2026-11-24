@@ -166,3 +166,31 @@ Historial único del trabajo, las decisiones y las comprobaciones del proyecto. 
 - Validación funcional de referencia: `scripts/test.ps1` ya ejecutado correctamente en el paso 18, con 35 pruebas y comprobaciones de formato, análisis y compilación. No se han modificado el código funcional ni las dependencias desde esa ejecución. Los recursos de los skills importados se conservan; no se han ejecutado sus scripts como parte de esta validación.
 - Se comprobarán el contenido preparado y el estado de Git tras crear el commit. Operación local, sin un nuevo push; la confirmación y el hash se registrarán en la siguiente actualización de la bitácora.
 - La revisión de espacios detectó avisos preexistentes en los skills importados y dos documentos de referencia. Se conserva su contenido original; la comprobación del código de aplicación, scripts y documentación propia se realiza por separado. Se añadió a las exclusiones `backend/config/reference.php`, generado por Symfony, para no versionar ese artefacto.
+
+### 20. Skill local para crear y actualizar el modelo
+
+- Se confirmó el commit anterior `229eb8c`, `feat: crear versión 0.1 de tareas con Symfony y Angular`. El árbol estaba limpio al iniciar esta tarea y `main` sigue dos commits por delante de `origin/main`.
+- El usuario solicitó un skill exclusivo de este proyecto para crear y actualizar el modelo, leyendo el README y el análisis y tomando como referencia la documentación de orquestación.
+- Se leyeron README, análisis aprobado, decisiones de la versión 0.1 y los documentos de orquestación original/V2. Se contrastaron con Task, repositorio, mapeo Doctrine, migración, TaskPayload, tipos Angular, pruebas y scripts existentes.
+- Se creó `.agents/skills/modelo/SKILL.md` con entradas, límites, flujo de creación/actualización de entidades, tipos, relaciones e invariantes; coherencia con atributos Doctrine, evolución mediante migraciones e impacto en contratos Angular. Se preserva el alcance del MVP y se distingue entre diseñar y aplicar cambios.
+- La separación de responsabilidades se tomó de la orquestación, sin trasladar los ejemplos de C#, EF Core, React o reservas al modelo de tareas. Se añadió una nota de integración específica a `docs/skills-orquestacion-v2.md` y se enlazó el skill desde AGENTS.md y el handoff.
+- Validación ejecutada: `quick_validate.py` devolvió `Skill is valid!`; se comprobaron las rutas y la opción real `doctrine:schema:validate --skip-sync` con la ayuda del comando instalado, y se revisaron los espacios del diff. La validación estructural no constituye una prueba de comportamiento del skill.
+- No se modificaron entidades, esquema, migraciones ni código de aplicación; no fue necesario repetir sus pruebas. Los cambios de este paso quedan locales, pendientes de commit y push.
+
+### 21. Revisión del modelo sin cambios de código
+
+- El usuario invocó `/modelo revisar`. Se leyó la versión actual del skill y se revisaron entidad, repositorio, validación HTTP, migración, contrato TypeScript y documentación vigente. Se conserva el registro automático en esta bitácora por la instrucción del usuario, sin modificar el modelo ni el skill durante la revisión.
+- Hallazgo principal: el skill actual establece como fuente `docs/analisis.md`, reglas de `docs/app/lista-de-tareas.md` y ADR de `docs/decisiones/`, rutas que no existen. CLAUDE.md referencia realmente `docs/analisis-diseño.md` y `docs/version-0.1.md`. No se pueden validar las reglas RN o los issues mencionados por el skill sin esas fuentes; no se consideran requisitos confirmados del MVP.
+- El skill cita además `scripts/backend-test.ps1` y los skills `bitacora` y `mensaje-commit`, que no corresponden a los nombres locales `test-backend.ps1`, `project-log` y `commit-messages`. Su receta de borrar `var/data.db` no se ejecutó: para probar migraciones debe utilizarse una base aislada, conservando los datos locales.
+- Hallazgo del modelo: Task admite directamente un título vacío y, mediante update(), longitudes de título/descripción de 201/5001 caracteres. Se reprodujo en memoria sin persistir datos. La API actual sí protege esos límites mediante TaskPayload; la entidad no los garantiza frente a otros futuros consumidores.
+- Diferencia menor de contrato: CreateTask en Angular exige description mediante Pick, aunque el contrato POST permite omitirla. La interfaz actual envía el campo, por lo que no se ha observado un fallo de su formulario; conviene reflejar su opcionalidad al alinear tipos.
+- Comprobaciones ejecutadas: `doctrine:schema:validate` confirmó mapeo y esquema sincronizados; `doctrine:migrations:status` mostró una migración ejecutada, ninguna nueva y ninguna ejecutada no disponible. La ayuda de `doctrine:migrations:diff` no ofrece dry-run; se omitió su ejecución para no generar archivos.
+- Resultado: el esquema persistido es coherente con la implementación 0.1. Antes de aplicar los modos de escritura conviene alinear el skill con las fuentes reales y decidir si las invariantes deben protegerse también en la entidad. Plantillas y recurrencia siguen fuera del MVP; no se consideran piezas pendientes obligatorias. No se hicieron commits ni se modificaron datos de aplicación.
+
+### 22. Preparación del commit local del skill modelo
+
+- El usuario solicitó un commit exclusivamente local de los cambios pendientes.
+- Se revisaron el skill modelo en su estado actual, su enlace en AGENTS.md, las notas de integración en la orquestación, el handoff y las entradas de la bitácora.
+- Se incluyen los hallazgos de la revisión anterior como pendientes documentados; este commit no corrige las referencias del skill ni modifica entidades, validaciones o tipos Angular.
+- Mensaje elegido con `commit-messages`: `chore: añadir skill de modelo y documentar su revisión`.
+- Se comprobarán los espacios del diff preparado y el estado de Git tras crear el commit. No se repetirá la batería de aplicación al no haber cambios funcionales. No se hará push.

@@ -1,5 +1,11 @@
 # Orquestación de Skills V2 — tstcln-reservas
 
+## Aplicación en DemoAgentes
+
+El contenido de reservas que sigue se conserva como referencia. En DemoAgentes, el skill local implementado para el tramo de modelo es [`modelo`](../.agents/skills/modelo/SKILL.md), invocable como `$modelo`. Lee el README, el análisis aprobado y `docs/version-0.1.md`, y trabaja sobre las entidades de `backend/src/Entity/` con atributos Doctrine.
+
+Su salida son los cambios del modelo y las pruebas pertinentes, las migraciones necesarias cuando cambia el esquema y la evaluación del impacto en validación, JSON y tipos Angular. Se integra después del análisis y antes de las adaptaciones de persistencia, API y frontend que correspondan; no ejecuta por sí mismo toda la orquestación ni presupone otros skills instalados. Las rutas, el dominio de reservas y los catálogos del resto de este documento no describen requisitos nuevos de DemoAgentes.
+
 Esta versión V2 adapta la orquestación de skills al stack real del repositorio: backend Symfony/PHP con Doctrine y frontend Angular/TypeScript.
 
 La versión anterior se mantiene intacta en [docs/skills-orquestacion.md](docs/skills-orquestacion.md).

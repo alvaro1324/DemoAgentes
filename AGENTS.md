@@ -114,3 +114,5 @@ Mantener al usuario informado de cada paso y actualizar automáticamente `docs/b
 Al iniciar o retomar un chat en este repositorio y al registrar avances relevantes, utilizar el skill local `project-log`, definido en `.agents/skills/project-log/SKILL.md`. Leer la bitácora y contrastar su estado con los archivos y Git antes de continuar.
 
 Al preparar o revisar mensajes de commit, utilizar el skill local `commit-messages`, definido en `.agents/skills/commit-messages/SKILL.md`.
+
+Al crear o actualizar entidades, campos, tipos, relaciones o invariantes del modelo de tareas, utilizar el skill local `modelo`, definido en `.agents/skills/modelo/SKILL.md`. Se apoya en el análisis aprobado y en las decisiones implementadas, y comprueba el impacto en Doctrine y los contratos consumidos por Angular.

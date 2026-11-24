@@ -1,0 +1,260 @@
+<div class="workspace">
+  <aside class="sidebar">
+    <a class="brand" href="/" aria-label="Inicio de Tareas"
+      ><span class="brand-icon">✓</span> tareas<span class="brand-dot">.</span></a
+    >
+    <p class="sidebar-label">MI ESPACIO</p>
+    <div class="nav-item">
+      <span>▤</span> Mis tareas <span class="nav-count">{{ tasks().length }}</span>
+    </div>
+    <div class="sidebar-footer">
+      <span class="avatar">T</span>
+      <div>Tu espacio personal<small>Una cosa cada vez</small></div>
+    </div>
+  </aside>
+  <main>
+    <header class="topbar">
+      <span>Mi espacio <span class="separator">/</span> <strong>Mis tareas</strong></span
+      ><span class="version">v0.1</span>
+    </header>
+    <div class="content">
+      <div class="page-heading">
+        <div>
+          <p class="eyebrow">MENOS RUIDO, MÁS FOCO</p>
+          <h1>Un paso cada vez.</h1>
+          <p class="subtitle">Organiza lo que importa y deja espacio para lo demás.</p>
+        </div>
+        <button class="primary" (click)="openEditor()" [disabled]="saving()">＋ Nueva tarea</button>
+      </div>
+      <section class="stats" aria-label="Resumen de tareas">
+        <div class="stat">
+          <span class="stat-icon lavender">▤</span>
+          <div>
+            <strong>{{ tasks().length }}</strong><span>En tu lista</span>
+          </div>
+        </div>
+        <div class="stat">
+          <span class="stat-icon amber">◷</span>
+          <div>
+            <strong>{{ pendingCount() }}</strong><span>Por hacer</span>
+          </div>
+        </div>
+        <div class="stat">
+          <span class="stat-icon mint">✓</span>
+          <div>
+            <strong>{{ completedCount() }}</strong><span>Completadas</span>
+          </div>
+        </div>
+      </section>
+      @if (error()) {
+        <div class="alert" role="alert">
+          {{ error() }} <button (click)="load()" [disabled]="loading()">Reintentar</button>
+        </div>
+      }
+      <p class="notice" role="status" aria-live="polite">{{ notice() }}</p>
+      @if (editorOpen()) {
+        <section class="editor" aria-labelledby="editor-title">
+          <div class="section-heading">
+            <h2 id="editor-title">
+              {{ editingId() === null ? 'Una nueva tarea' : 'Editar tarea' }}
+            </h2>
+            <button class="text-button" (click)="closeEditor()" [disabled]="saving()">
+              Cerrar
+            </button>
+          </div>
+          <form [formGroup]="form" (ngSubmit)="save()">
+            <label for="task-title">Título <span aria-hidden="true">*</span></label>
+            <input
+              id="task-title"
+              formControlName="title"
+              placeholder="¿Qué quieres hacer?"
+              maxlength="200"
+              [attr.aria-invalid]="form.controls.title.touched && form.controls.title.invalid"
+              aria-describedby="title-error"
+            />
+            <p id="title-error" class="field-error">
+              @if (form.controls.title.touched && form.controls.title.invalid) {
+                Escribe un título de entre 1 y 200 caracteres, con algún carácter distinto de
+                espacio.
+              }
+            </p>
+            <label for="task-description"
+              >Descripción <span class="optional">(opcional)</span></label
+            >
+            <textarea
+              id="task-description"
+              formControlName="description"
+              placeholder="Añade los detalles que necesites recordar…"
+              rows="3"
+              maxlength="5000"
+              aria-describedby="description-error"
+            ></textarea>
+            <p id="description-error" class="field-error">
+              @if (form.controls.description.invalid) {
+                La descripción admite hasta 5.000 caracteres.
+              }
+            </p>
+            <div class="form-actions">
+              <button type="button" class="secondary" (click)="closeEditor()" [disabled]="saving()">
+                Cancelar</button
+              ><button class="primary" type="submit" [disabled]="saving()">
+                {{ saving() ? 'Guardando…' : 'Guardar tarea' }}
+              </button>
+            </div>
+          </form>
+        </section>
+      }
+      <section class="task-panel" aria-labelledby="list-title">
+        <div class="panel-heading">
+          <h2 id="list-title">Tu lista de tareas</h2>
+          <button
+            class="text-button"
+            (click)="load()"
+            [disabled]="loading() || busyId() !== null || saving()"
+          >
+            {{ loading() ? 'Cargando…' : 'Actualizar' }}
+          </button>
+        </div>
+        <div class="tabs" aria-label="Filtrar tareas">
+          @for (tab of filters; track tab.value) {
+            <button
+              [class.active]="filter() === tab.value"
+              [attr.aria-pressed]="filter() === tab.value"
+              (click)="filter.set(tab.value)"
+            >
+              {{ tab.label }}
+              <span>{{
+                tab.value === 'all'
+                  ? tasks().length
+                  : tab.value === 'pending'
+                    ? pendingCount()
+                    : completedCount()
+              }}</span>
+            </button>
+          }
+        </div>
+        @if (loading()) {
+          <div class="empty" role="status">
+            <span class="empty-icon">◷</span>
+            <h3>Buscando tus tareas…</h3>
+          </div>
+        } @else if (visibleTasks().length === 0) {
+          <div class="empty">
+            <span class="empty-icon">✓</span>
+            <h3>
+              {{
+                filter() === 'all' ? 'Todo empieza con una tarea' : 'No hay tareas en este estado'
+              }}
+            </h3>
+            <p>
+              {{
+                filter() === 'all'
+                  ? 'Anota lo que tienes en mente. El primer paso es el más sencillo.'
+                  : 'Prueba otro filtro para ver el resto de tu lista.'
+              }}
+            </p>
+            @if (filter() === 'all') {
+              <button class="secondary" (click)="openEditor()">Crear mi primera tarea</button>
+            }
+          </div>
+        } @else {
+          <ul class="task-list">
+            @for (task of visibleTasks(); track task.id) {
+              <li class="task-row" [class.completed]="task.isCompleted">
+                <button
+                  class="check"
+                  [class.checked]="task.isCompleted"
+                  [attr.aria-label]="
+                    (task.isCompleted ? 'Marcar como pendiente: ' : 'Completar: ') + task.title
+                  "
+                  [disabled]="busyId() !== null"
+                  (click)="toggle(task)"
+                >
+                  @if (task.isCompleted) {
+                    ✓
+                  }
+                </button>
+                <button
+                  class="task-summary"
+                  (click)="showDetail(task)"
+                  [disabled]="detailLoading()"
+                >
+                  <strong>{{ task.title }}</strong>
+                  @if (task.description) {
+                    <span>{{ task.description }}</span>
+                  }
+                  <small>Creada {{ task.createdAt | date: 'dd/MM/yyyy' }}</small>
+                </button>
+                <span class="status" [class.done]="task.isCompleted">{{
+                  task.isCompleted ? 'Completada' : 'Pendiente'
+                }}</span>
+                <div class="row-actions">
+                  <button
+                    class="text-button"
+                    [attr.aria-label]="'Editar: ' + task.title"
+                    (click)="openEditor(task)"
+                    [disabled]="saving()"
+                  >
+                    Editar</button
+                  ><button
+                    class="text-button danger"
+                    [attr.aria-label]="'Eliminar: ' + task.title"
+                    (click)="deleteTarget.set(task)"
+                    [disabled]="busyId() !== null"
+                  >
+                    Eliminar
+                  </button>
+                </div>
+              </li>
+            }
+          </ul>
+        }
+        <div class="panel-footer">
+          <span
+            >{{ visibleTasks().length }}
+            {{ visibleTasks().length === 1 ? 'tarea' : 'tareas' }}</span
+          ><span>Haz sitio a lo importante.</span>
+        </div>
+      </section>
+      @if (detailLoading()) {
+        <p role="status">Cargando detalle…</p>
+      }
+      @if (selected(); as task) {
+        <section class="editor detail" aria-labelledby="detail-title">
+          <div class="section-heading">
+            <h2 id="detail-title">{{ task.title }}</h2>
+            <button class="text-button" (click)="selected.set(null)">Cerrar detalle</button>
+          </div>
+          <p class="description">{{ task.description || 'Sin descripción.' }}</p>
+          <dl>
+            <dt>Estado</dt>
+            <dd>{{ task.isCompleted ? 'Completada' : 'Pendiente' }}</dd>
+            <dt>Creada</dt>
+            <dd>{{ task.createdAt | date: 'dd/MM/yyyy HH:mm' }}</dd>
+            <dt>Última modificación</dt>
+            <dd>{{ task.updatedAt | date: 'dd/MM/yyyy HH:mm' }}</dd>
+          </dl>
+          <button class="secondary" (click)="openEditor(task)">Editar tarea</button>
+        </section>
+      }
+      @if (deleteTarget(); as task) {
+        <section class="delete-confirm" role="region" aria-label="Confirmar eliminación">
+          <h2>¿Eliminar esta tarea?</h2>
+          <p>Se eliminará «{{ task.title }}» de tu lista.</p>
+          <div class="form-actions">
+            <button
+              class="secondary"
+              (click)="deleteTarget.set(null)"
+              [disabled]="busyId() !== null"
+            >
+              Conservar</button
+            ><button class="delete-button" (click)="confirmDelete()" [disabled]="busyId() !== null">
+              {{ busyId() !== null ? 'Eliminando…' : 'Eliminar tarea' }}
+            </button>
+          </div>
+        </section>
+      }
+      <footer class="page-footer">Un poco de orden. Un poco más de calma.</footer>
+    </div>
+  </main>
+</div>

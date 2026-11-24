@@ -1,0 +1,15 @@
+/.tools/
+/.runtime/
+/backend/vendor/
+/backend/var/
+/backend/.env.local
+/backend/.env.*.local
+/backend/.phpunit.cache/
+/backend/config/reference.php
+/frontend/node_modules/
+/frontend/.angular/
+/frontend/dist/
+/frontend/coverage/
+/frontend/test-results/
+/frontend/playwright-report/
+.DS_Store

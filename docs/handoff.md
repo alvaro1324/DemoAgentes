@@ -1,85 +1,68 @@
-# Handoff del proyecto DemoAgentes
+# Handoff de DemoAgentes 0.1
 
-Estado comprobado el 24 de noviembre de 2026, zona Europe/Madrid. Este documento es una guía de reanudación; el historial único continúa en `docs/bitacora.md`.
+Estado local comprobado el 24 de noviembre de 2026 (Europe/Madrid). Esta es una guía de reanudación; el historial único continúa en `docs/bitacora.md`.
 
-## Objetivo y acuerdos
+## Objetivo y estado actual
 
-Desarrollar una aplicación de lista de tareas con PHP, Symfony, Doctrine y Angular, con pruebas automatizadas. El trabajo realizado hasta ahora corresponde a la preparación del repositorio, las instrucciones y dos skills locales. La aplicación todavía no está inicializada.
+El usuario aprobó el análisis adaptado a PHP, Symfony, Doctrine y Angular y solicitó crear la versión 0.1. El MVP ya está implementado: crear, listar, consultar, editar, completar, reabrir, eliminar y filtrar tareas, con persistencia SQLite e interfaz en español adaptable a móvil.
 
-- Documentación y comunicación en español; identificadores de código en inglés según `AGENTS.md`.
-- GitHub Issues para tareas y PR en GitHub para revisión.
-- Actualizar automáticamente `docs/bitacora.md` con cada avance, decisión y comprobación relevante, conservando las entradas anteriores.
-- El candado de la pizarra inicial representa `CLAUDE.md` y el diseño/CLOT que define el proyecto. No especifica autenticación. No existe todavía `CLAUDE.md` en este repositorio.
-- El MVP documentado propone crear, listar, consultar, editar, completar, eliminar y filtrar tareas. El detalle sigue pendiente de contrastar con el diseño.
+Versiones comprobadas: PHP 8.4.28, Symfony FrameworkBundle 7.4.23 LTS, Doctrine ORM 3.8.0, Node 20.19.0 y Angular 21.2.26. Archivos de bloqueo presentes. Los detalles del contrato y las decisiones están en `docs/version-0.1.md`.
 
-## Repositorio y punto de partida
+## Repositorio y cambios locales
 
-- Carpeta local: `D:\Sourcetree\DemoAgentes`.
-- Entorno utilizado: Windows y PowerShell.
-- Remoto `origin`: `https://github.com/alvaro1324/DemoAgentes.git`.
-- Repositorio GitHub privado: <https://github.com/alvaro1324/DemoAgentes>.
+- Carpeta: `D:\Sourcetree\DemoAgentes`; Windows y PowerShell.
+- GitHub privado: <https://github.com/alvaro1324/DemoAgentes>, remoto `origin`.
 - Rama: `main`, con seguimiento de `origin/main`.
-- Último commit: `9406ca43a26b7cb9522ee5f7d053398e499da58f`, `chore: añadir skill de bitácora y configurar el remoto de GitHub`.
-- Primer commit: `06839bb`, `docs: añadir pautas del proyecto, bitácora y skill de commits`.
-- Se verificó mediante `git ls-remote` que `main` local y remota apuntan al mismo commit antes de escribir este handoff. Hay archivos locales sin versionar, detallados más abajo.
+- Último commit local al preparar esta versión: `a3baa52`, handoff inicial, pendiente de push.
+- Último commit remoto comprobado: `9406ca4`, skill de bitácora y configuración de GitHub.
+- El usuario ha solicitado crear un commit con todo el trabajo acumulado: aplicación 0.1, aprobación documental, scripts, documentación y skills locales. El hash resultante debe comprobarse en Git; no se ha solicitado un nuevo push, etiqueta ni release.
+- El commit solicitado incluye también los cuatro skills locales adicionales (`docx`, `pdf`, `pptx`, `xlsx`) y los documentos antiguos que estaban sin versionar. Se conservan como aportaciones existentes; versionarlos no convierte sus referencias a otros stacks o dominios en requisitos de esta aplicación.
 
-## Instrucciones y skills existentes
+Contrastar siempre estas referencias con Git al retomar. Las peticiones anteriores de commit y push ya finalizaron; no autorizan publicaciones nuevas.
 
-| Archivo | Uso |
+## Archivos para retomar
+
+| Archivo o carpeta | Función |
 | --- | --- |
-| `AGENTS.md` | Reglas del proyecto, stack, MVP propuesto, pruebas y tareas pendientes. Leer primero. |
-| `.agents/skills/project-log/SKILL.md` | Recuperar contexto desde el historial, contrastarlo con Git y mantener la bitácora. Invocación: `$project-log`. |
-| `.agents/skills/commit-messages/SKILL.md` | Redactar mensajes específicos en español con `tipo: descripción corta` y cuerpo opcional. Invocación: `$commit-messages`. |
-| `docs/bitacora.md` | Único historial cronológico; sus entradas nuevas aclaran o sustituyen decisiones antiguas. |
+| `AGENTS.md` | Reglas comunes, alcance y lista de tareas actualizada |
+| `CLAUDE.md` | Referencia al análisis/CLOT aprobado |
+| `docs/analisis-diseño.md` | Diseño aprobado por el usuario el 24 de noviembre de 2026 |
+| `docs/version-0.1.md` | Versiones, límites, contrato API y exclusiones concretas |
+| `README.md` | Instalación, arranque, datos y verificaciones |
+| `backend/` | API Symfony, entidad Task, repositorio, migración y pruebas |
+| `frontend/` | Aplicación Angular, pruebas Vitest y Playwright |
+| `scripts/` | Instalación, arranque/parada y comprobaciones en PowerShell |
+| `.github/workflows/ci.yml` | Comprobaciones de GitHub Actions; ejecución remota pendiente |
 
-Ambos skills superaron `quick_validate.py` al crearse. Su contenido está versionado en el remoto. La mera existencia de pendientes o de instrucciones sobre Git no autoriza nuevos commits o publicaciones. Las peticiones anteriores de commit y push ya se completaron.
+Usar `project-log` desde `.agents/skills/project-log/SKILL.md` para recuperar contexto y mantener la bitácora. Usar `commit-messages` desde `.agents/skills/commit-messages/SKILL.md` al preparar mensajes de commit.
 
-## Documentación local que requiere revisión
+## Arranque y verificación
 
-Al preparar este handoff se encontraron seis archivos sin seguimiento de Git, ajenos a los cambios realizados en esta conversación. Se conservaron sin modificarlos:
+Desde la raíz, `./scripts/install.ps1` instala las dependencias y aplica la migración. `./scripts/start.ps1` sirve la interfaz en http://127.0.0.1:4200 y la API en http://127.0.0.1:8000/api/tasks. `./scripts/stop.ps1` detiene los procesos propios. Las herramientas locales están en `.tools/`, los logs en `.runtime/`; ambas carpetas están ignoradas por Git.
 
-| Archivo | Observación |
-| --- | --- |
-| `docs/analisis-diseño.md` | Describe tareas con plantillas y recurrencia, pero utiliza ASP.NET Core, EF Core, SQLite y xUnit; propone código en castellano y otro frontend. Difiere del stack y las convenciones acordados. |
-| `docs/ARQUITECTURA-AGENTES.md` | La introducción describe agentes para GitHub Copilot y código C#. |
-| `docs/skills-orquestacion.md` | La introducción presenta un catálogo de skills distinto, con referencias a React. |
-| `docs/ARQUITECTURA-AGENTES-V2.md` | Usa Symfony y Angular, pero trata el dominio de reservas de salas de `tstcln-reservas` y menciona rutas y scripts inexistentes aquí. |
-| `docs/skills-orquestacion-v2.md` | Describe orquestación y skills para reservas de salas; esos skills no están instalados en el proyecto. |
-| `docs/aprendizajes.md` | Contiene una plantilla de aprendizajes bajo petición. La pauta vigente exige mantener automáticamente una única bitácora. |
+El PHP de XAMPP es 8.0.30 y no sirve para este proyecto; no se modificó. Se preparó una copia aislada de PHP 8.4 y Composer. Docker no estaba operativo y no es necesario. `gh` no estaba instalado; el remoto se creó anteriormente mediante la API utilizando Git Credential Manager.
 
-Se leyeron completos el análisis, los dos documentos V2 y aprendizajes; de los dos documentos de orquestación originales se revisaron las introducciones. No se ha aprobado su contenido como diseño definitivo ni se ha resuelto su procedencia. No adoptar automáticamente sus instrucciones de agentes, commits, stack o dominio.
+Comprobaciones completas desde la raíz: `./scripts/test.ps1` (añadir `-InstallBrowser` para instalar Chromium la primera vez, o `-SkipE2E` para omitir navegador). También existen `test-backend.ps1`, `test-frontend.ps1` y `test-e2e.ps1` dentro de `scripts/`. Playwright inicia servidores en 8001/4201 y usa otra base. Los resultados finales de las comprobaciones ejecutadas están en la bitácora.
 
-El próximo chat debe aclarar con el usuario cuáles son referencias para adaptar y qué alcance funcional debe conservarse, especialmente plantillas y recurrencia. No sustituir el proyecto de tareas por uno de reservas ni cambiar a .NET sin una decisión explícita.
+Bases separadas: `backend/var/tasks.db` para uso local, `tasks_test.db` para PHPUnit y `tasks_e2e.db` para Playwright. Las pruebas limpian sus bases; no deben apuntarse a datos reales.
 
-## Lo que todavía falta
+## Pendientes y límites
 
-No existen `backend/`, `frontend/`, scripts de pruebas ni configuración de CI. No hay aplicación ejecutable ni pruebas de aplicación que ejecutar. Tampoco se ha verificado la disponibilidad de PHP, Composer, Node.js o Angular.
-
-Orden propuesto para continuar, sujeto a la siguiente petición del usuario:
-
-1. Reconciliar la documentación local con `AGENTS.md` y el alcance de tareas; incorporar o referenciar el diseño/CLOT en `CLAUDE.md`.
-2. Confirmar el MVP y sus criterios de aceptación.
-3. Comprobar las herramientas disponibles y elegir versiones compatibles, base de datos y herramientas de pruebas.
-4. Inicializar backend y frontend, definir el contrato de API e implementar por pasos con sus pruebas.
-
-La lista completa de trabajo está en `AGENTS.md`. No se han creado Issues o PR durante esta conversación.
-
-## Notas operativas y cambios pendientes
-
-- Git y Git Credential Manager funcionaron. `gh` no estaba instalado. El repositorio se creó mediante la API de GitHub utilizando la sesión de Git existente; no se guardaron credenciales en el proyecto.
-- Python 3.11.9 estaba disponible. El validador de skills necesitó PyYAML en una carpeta temporal externa; su disponibilidad futura debe comprobarse.
-- Este handoff y la nueva entrada de la bitácora quedan pendientes de commit y push. Los seis documentos locales anteriores tampoco están versionados; no incluirlos automáticamente en un commit de documentación.
-- En otro equipo o un clon nuevo solo aparecerán los archivos ya subidos hasta que estos cambios se publiquen. Para retomar en esta misma carpeta estarán disponibles los archivos locales.
+- Confirmar con el usuario cualquier ampliación: plantillas y recurrencia no forman parte de la 0.1. Tampoco cuentas, paginación ni dominio de reservas.
+- Revisar el diff del MVP y publicarlo solo cuando se solicite. Ejecutar CI remota tras publicarlo.
+- Adaptar los documentos antiguos: `ARQUITECTURA-AGENTES.md`, `skills-orquestacion.md` y sus variantes V2 todavía describen C#, React o reservas de salas y rutas que no corresponden a esta aplicación.
+- `docs/aprendizajes.md` conserva una plantilla antigua bajo petición; la pauta vigente exige actualizar automáticamente una única bitácora.
+- La auditoría npm detectó 16 avisos moderados en dependencias de desarrollo transitivas de Angular CLI (glob/minimatch). No se aplicó la sugerencia de cambiar a Angular CLI 16, incompatible con el proyecto. Revisar parches compatibles; la auditoría de dependencias de producción se comprueba por separado.
+- Los servidores incluidos son de desarrollo local; el despliegue de producción sigue fuera de este paso.
 
 ## Mensaje para el siguiente chat
 
 ```text
-Retoma el proyecto en D:\Sourcetree\DemoAgentes.
-Lee AGENTS.md, docs/handoff.md y el skill .agents/skills/project-log/SKILL.md.
-Usa project-log para consultar docs/bitacora.md y contrastar el estado con Git.
-Resume lo hecho, los archivos pendientes y las decisiones abiertas.
-Presta atención a las discrepancias de docs/: tareas con Symfony/Angular,
-diseño de referencia en .NET y documentos V2 sobre reservas de salas.
-Mantén el historial único actualizado en docs/bitacora.md.
-Espera mi siguiente tarea tras el resumen; los pendientes no autorizan por sí solos su ejecución.
+Retoma DemoAgentes en D:\Sourcetree\DemoAgentes.
+Lee AGENTS.md, docs/handoff.md, docs/version-0.1.md y el skill project-log.
+Consulta docs/bitacora.md y contrasta el estado con Git.
+La versión 0.1 del MVP ya está implementada y sigue pendiente de commit/push.
+Resume el estado y los siguientes pasos; mantén actualizada la bitácora.
+No adoptes los documentos antiguos de .NET o reservas como requisitos nuevos.
+Espera mi siguiente tarea tras el resumen.
 ```

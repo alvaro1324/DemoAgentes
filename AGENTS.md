@@ -4,7 +4,7 @@
 
 Desarrollar una aplicación de lista de tareas con PHP, Symfony, Doctrine y Angular, acompañada de pruebas automatizadas.
 
-Este archivo guía el trabajo de los agentes en todo el repositorio. La carpeta parte vacía: la estructura y los comandos propuestos deberán concretarse cuando se inicialice el proyecto.
+Este archivo guía el trabajo de los agentes en todo el repositorio. La versión 0.1 implementa el MVP en `backend/` y `frontend/`; consultar el README para instalación, arranque y comprobaciones, y `docs/version-0.1.md` para las decisiones y el contrato.
 
 ## Funcionalidad del MVP
 
@@ -24,8 +24,8 @@ Modelo inicial propuesto: `Task`, con identificador, título, descripción, esta
 - Persistencia: Doctrine ORM y migraciones de Doctrine.
 - Frontend: Angular con TypeScript y formularios reactivos.
 - Pruebas del backend: PHPUnit y las herramientas de pruebas de Symfony.
-- Pruebas del frontend: las herramientas compatibles con la versión de Angular elegida.
-- Pruebas de extremo a extremo: herramienta pendiente de selección.
+- Pruebas del frontend: Vitest mediante el builder de pruebas de Angular.
+- Pruebas de extremo a extremo: Playwright con Chromium.
 
 Estructura inicial propuesta:
 
@@ -41,7 +41,7 @@ Antes de instalar dependencias, comprobar las herramientas disponibles y elegir 
 
 El flujo del proyecto conecta documentación, análisis, tareas en GitHub Issues, desarrollo de la aplicación y una PR en GitHub. Los criterios de aceptación deben acompañar cada paso.
 
-El candado de la pizarra representa `CLAUDE.md`: la referencia al diseño y al CLOT que define en qué consiste el proyecto. El desarrollo debe partir de esa definición y respetar su alcance y criterios. Esta referencia no implica un requisito de autenticación o autorización. El contenido del diseño/CLOT todavía no se ha incorporado al repositorio; no se debe inventar.
+El candado de la pizarra representa `CLAUDE.md`: la referencia al diseño y al CLOT que define en qué consiste el proyecto. El desarrollo debe partir de esa definición y respetar su alcance y criterios. Esta referencia no implica un requisito de autenticación o autorización. `CLAUDE.md` referencia el análisis aprobado y las decisiones concretas de la versión 0.1.
 
 1. Leer el diseño/CLOT y `CLAUDE.md` cuando estén disponibles, además de la documentación y el código relacionados con el cambio.
 2. Convertir la necesidad en una tarea concreta con alcance y criterios de aceptación verificables.
@@ -80,25 +80,24 @@ Los comandos exactos de instalación, arranque, migraciones, pruebas y análisis
 
 ## Lista inicial de tareas
 
-- [ ] Incorporar o referenciar el diseño/CLOT del proyecto en `CLAUDE.md` y alinear estas instrucciones con su contenido.
-- [ ] Confirmar el alcance del MVP y redactar sus criterios de aceptación.
-- [ ] Elegir versiones de PHP, Symfony, Doctrine, Node.js y Angular compatibles.
-- [ ] Elegir el motor de base de datos y documentar el entorno local.
-- [ ] Inicializar `backend/` y `frontend/`, sus dependencias y archivos de exclusión de Git.
-- [ ] Configurar variables de entorno de ejemplo y una base de datos de pruebas aislada.
-- [ ] Definir el contrato de la API, las reglas de validación y el formato de errores.
-- [ ] Crear la entidad `Task`, su repositorio y la migración inicial.
-- [ ] Implementar y probar las operaciones de la API y el filtrado por estado.
-- [ ] Implementar la interfaz Angular y su conexión con la API.
-- [ ] Añadir pruebas de frontend y el recorrido de extremo a extremo.
-- [ ] Configurar formato, análisis estático y automatización de comprobaciones en CI.
-- [ ] Documentar instalación, arranque y ejecución de pruebas en el README.
+- [x] Incorporar o referenciar el diseño/CLOT del proyecto en `CLAUDE.md` y alinear estas instrucciones con su contenido.
+- [x] Confirmar el alcance del MVP y redactar sus criterios de aceptación: análisis aprobado por el usuario el 24 de noviembre de 2026 en `docs/analisis-diseño.md`, con las decisiones pendientes allí indicadas.
+- [x] Elegir versiones de PHP, Symfony, Doctrine, Node.js y Angular compatibles.
+- [x] Elegir el motor de base de datos y documentar el entorno local.
+- [x] Inicializar `backend/` y `frontend/`, sus dependencias y archivos de exclusión de Git.
+- [x] Configurar variables de entorno de ejemplo y una base de datos de pruebas aislada.
+- [x] Definir el contrato de la API, las reglas de validación y el formato de errores.
+- [x] Crear la entidad `Task`, su repositorio y la migración inicial.
+- [x] Implementar y probar las operaciones de la API y el filtrado por estado.
+- [x] Implementar la interfaz Angular y su conexión con la API.
+- [x] Añadir pruebas de frontend y el recorrido de extremo a extremo.
+- [x] Configurar formato, análisis estático y automatización de comprobaciones en CI (workflow creado; ejecución remota pendiente de publicación).
+- [x] Documentar instalación, arranque y ejecución de pruebas en el README.
 - [ ] Revisar el conjunto y preparar la primera PR cuando se solicite trabajar con el repositorio remoto.
 
 ## Decisiones pendientes
 
-- Motor de base de datos y necesidad de contenedores para desarrollo.
-- Herramienta de pruebas de extremo a extremo y proveedor de CI.
+- La versión 0.1 utiliza SQLite sin contenedores, Playwright para extremo a extremo y un workflow de GitHub Actions. Revisar estas decisiones si cambian los requisitos de despliegue.
 - Configuración de la integración con GitHub mediante MCP, si procede.
 - Requisitos adicionales, como prioridades, fechas límite o paginación; quedan fuera del MVP hasta acordarlos.
 

@@ -1,0 +1,13 @@
+import { existsSync, mkdirSync } from 'node:fs';
+import { resolve } from 'node:path';
+import { spawn, spawnSync } from 'node:child_process';
+const backend = resolve('../backend');
+const localPhp = resolve('../.tools/php/php.exe');
+const php = process.env.PHP_BINARY || (existsSync(localPhp) ? localPhp : 'php');
+mkdirSync(resolve(backend, 'var'), {recursive: true});
+const env = {...process.env, APP_ENV: 'test', APP_DEBUG: '0', DATABASE_URL: 'sqlite:///' + resolve(backend, 'var/tasks_e2e.db').replaceAll('\\', '/')};
+const migration = spawnSync(php, ['bin/console', 'doctrine:migrations:migrate', '--no-interaction'], {cwd: backend, env, stdio: 'inherit'});
+if (migration.status !== 0) process.exit(migration.status ?? 1);
+const server = spawn(php, ['-S', '127.0.0.1:8001', '-t', 'public', 'public/index.php'], {cwd: backend, env, stdio: 'inherit'});
+for (const signal of ['SIGINT', 'SIGTERM']) process.on(signal, () => server.kill());
+server.on('exit', code => process.exit(code ?? 0));

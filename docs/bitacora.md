@@ -105,3 +105,64 @@ Historial único del trabajo, las decisiones y las comprobaciones del proyecto. 
 - Los seis documentos de referencia detectados en el paso anterior permanecen sin versionar y sin modificar, pendientes de reconciliar con el proyecto.
 - Mensaje elegido con `commit-messages`: `docs: añadir handoff para retomar el proyecto desde otro chat`.
 - Se comprobarán el diff preparado y los espacios antes del commit, y el último registro y el estado de Git después. Esta operación es local; no incluye un nuevo push.
+
+### 14. Adaptación del análisis al stack del proyecto
+
+- Se confirmó el commit local `a3baa52`, `docs: añadir handoff para retomar el proyecto desde otro chat`; `main` está un commit por delante de `origin/main`, sin un nuevo push.
+- El usuario señaló que el análisis existente no corresponde al stack necesario. Se adaptó `docs/analisis-diseño.md` a PHP, Symfony, Doctrine, Angular y pruebas automatizadas.
+- Se sustituyeron las capas, modelos, convenciones y pruebas de la propuesta anterior por una estructura backend/frontend, una entidad Task, contrato JSON preliminar, formularios y servicios Angular, migraciones y pruebas del stack acordado.
+- Se mantuvieron plantillas y recurrencia como ampliaciones propuestas pendientes de confirmación, sin incorporarlas automáticamente al MVP. Versiones, base de datos y detalles del contrato siguen abiertos.
+- Se consultaron las referencias oficiales de Symfony sobre pruebas, validación y repositorios Doctrine y la guía de formularios reactivos de Angular; los enlaces quedaron en el análisis.
+- Se actualizó `docs/handoff.md` para reflejar el análisis adaptado y el commit local existente. Los demás documentos de arquitectura y orquestación siguen pendientes de reconciliación y no se modificaron.
+- Comprobaciones: revisión documental frente a AGENTS.md, búsqueda de referencias técnicas incompatibles en el análisis y comprobación de espacios. No hay aplicación ni pruebas ejecutables todavía.
+- Estado: adaptación y documentación guardadas localmente, sin un nuevo commit ni push. Siguiente paso: confirmar las propuestas funcionales y técnicas antes de inicializar la aplicación.
+
+### 15. Aprobación del análisis adaptado
+
+- El usuario declaró «apruebo la documentacion, la firmo» tras confirmar la adaptación del análisis al stack PHP, Symfony, Doctrine y Angular.
+- Se registró su conformidad, con fecha 24 de noviembre de 2026 (Europe/Madrid), en `docs/analisis-diseño.md`. El análisis, el MVP y sus criterios de aceptación pasan a ser la base documental aprobada.
+- Se marcó como completada la tarea correspondiente en `AGENTS.md` y se actualizó el handoff para que el siguiente chat conozca la aprobación.
+- Las decisiones explícitamente pendientes mantienen ese estado. Los documentos de arquitectura y orquestación con otro stack o dominio siguen pendientes de adaptación; esta aprobación del análisis no reconcilia sus discrepancias.
+- Comprobaciones: coherencia del estado de aprobación entre análisis, instrucciones y handoff, y revisión de espacios del diff. La aprobación queda registrada como declaración del chat; no se ha generado una firma criptográfica.
+- Estado: cambios documentales guardados localmente, pendientes de commit y push. No se ha iniciado la implementación.
+
+### 16. Implementación y primeras comprobaciones de la versión 0.1
+
+- El usuario solicitó crear la aplicación 0.1 a partir de la documentación aprobada. Se implementó el MVP sin incorporar plantillas, recurrencia ni el dominio de reservas de los documentos antiguos.
+- Entorno: Node 20.19.0 y npm 10.8.2 disponibles; PHP no estaba en PATH y XAMPP tenía PHP 8.0.30. Docker estaba instalado sin daemon disponible. Se prepararon PHP 8.4.28 y Composer 2.11.3 en `.tools/`, ignorada por Git, verificando los checksums oficiales y sin modificar XAMPP ni la configuración global.
+- Se seleccionaron Symfony 7.4.23 LTS, Doctrine ORM 3.8.0, DBAL 4.6.0, SQLite y Angular 21.2.26 con CLI 21.2.31. Se consultaron las referencias oficiales de Symfony y Angular sobre soporte, persistencia y compatibilidad, enlazadas en el README y `version-0.1.md`.
+- Se crearon la entidad Task, repositorio, migración y API CRUD/filtro; validaciones de título, descripción, tipos y campos editables; errores JSON coherentes y fechas UTC. Se concretaron los límites y el contrato en `docs/version-0.1.md`.
+- Se creó la interfaz Angular con formularios reactivos, detalle, edición, finalización/reapertura, filtrado, confirmación de borrado y estados de carga, vacío y error. Los datos se guardan en el backend, sin tareas simuladas.
+- Se añadieron scripts de instalación, arranque y parada de procesos propios, comprobaciones, README, referencia de diseño en `CLAUDE.md` y workflow de GitHub Actions. Se mantuvieron intactos los documentos antiguos y los skills adicionales del usuario.
+- Durante la integración se ajustó la configuración a DoctrineBundle 3 y la estrategia de nombres al esquema de la migración; después pasaron el mapeo y la validación del esquema. PHPStan se configuró con la extensión Doctrine para reconocer los identificadores hidratados por el ORM.
+- Primeros resultados ejecutados: 19 pruebas PHPUnit con 116 aserciones; 14 pruebas Vitest; 2 pruebas Playwright/Chromium, incluido el ciclo completo y la validación móvil. Bases aisladas `tasks_test.db` y `tasks_e2e.db`; la base local es `tasks.db`.
+- También se comprobaron YAML, contenedor y PHPStan sin errores, compilación Angular, respuestas HTTP 200 de interfaz y API, arranque/parada y capturas de escritorio/móvil revisadas visualmente en `.runtime/`. Se corrigió el formato de la plantilla y se ajustó el presupuesto CSS al tamaño de la interfaz.
+- En curso al registrar esta entrada: comprobación del instalador reproducible, última verificación de frontend y cierre del handoff. El workflow de CI no se ha ejecutado en remoto. No se ha creado commit, etiqueta ni publicación de esta versión.
+
+### 17. Cierre de verificación local de la versión 0.1
+
+- El instalador `scripts/install.ps1` terminó correctamente utilizando los archivos de bloqueo; la migración es idempotente. Los scripts de arranque y parada se ejecutaron y la interfaz y API respondieron HTTP 200. Los servidores propios quedaron detenidos después de comprobarlos.
+- Resultado final: 19 pruebas PHPUnit (116 aserciones), 14 pruebas Vitest y 2 pruebas Playwright/Chromium, todas superadas. Pasaron PHPStan, validación de YAML/contenedor, validación del esquema Doctrine, formato Prettier y build Angular de producción. Se comprobó además la sintaxis de los scripts PowerShell y de la migración PHP.
+- Se revisaron capturas de escritorio de 1440 px y móvil de 390 px. El recorrido E2E verifica persistencia tras recargar, CRUD, filtros, finalización/reapertura y validación móvil sin desbordamiento horizontal.
+- Auditorías: Composer no detectó avisos de seguridad; `npm audit --omit=dev` devolvió cero vulnerabilidades. La auditoría npm completa notificó 16 avisos moderados en dependencias transitivas de desarrollo de Angular CLI, originados en glob/minimatch. Se documentaron como pendientes; no se aplicó el cambio de CLI incompatible sugerido por `npm audit fix --force`.
+- Se actualizó `docs/handoff.md` para retomar la implementación real, `AGENTS.md` con las tareas completadas y el análisis con referencias a las decisiones implementadas. Se retiró la configuración MCP generada por Angular CLI, que no es necesaria para ejecutar la aplicación.
+- La versión se identifica como 0.1.0 en VERSION, Composer y npm. Instalación y uso están en el README; contrato y versiones exactas, en `docs/version-0.1.md`.
+- Estado final de este paso: aplicación implementada y comprobada localmente; sin commit, etiqueta, push ni despliegue de la 0.1. El workflow de GitHub Actions está preparado y pendiente de ejecución remota. Los documentos antiguos y los cuatro skills adicionales del usuario permanecen sin modificar.
+
+### 18. Lanzadores PowerShell para uso y pruebas
+
+- El usuario pidió scripts PS1 para lanzar y probar la aplicación. Se conservaron los scripts existentes de instalación, arranque y parada, ya comprobados en el paso anterior.
+- Se creó `scripts/test.ps1` como entrada única para las comprobaciones del backend, frontend y navegador. Admite `-SkipE2E` para omitir navegador y `-InstallBrowser` para instalar Chromium cuando sea necesario.
+- Se añadió `scripts/test-e2e.ps1`, que usa el PHP del proyecto, ejecuta las pruebas de navegador y restaura la variable de entorno PHP_BINARY y el directorio al terminar. Se actualizaron README y handoff con estos comandos.
+- Comprobación ejecutada: `./scripts/test.ps1` terminó con código 0; pasaron las 19 pruebas PHPUnit, 14 Vitest y 2 Playwright, junto con formato, análisis estático, validaciones de configuración y compilación. La sintaxis de los scripts PowerShell se comprobó sin errores.
+- Estado: scripts listos para uso local, cambios pendientes de commit y push. Para arrancar: `./scripts/start.ps1`; para parar: `./scripts/stop.ps1`.
+
+### 19. Preparación del commit de todo el trabajo acumulado
+
+- El usuario solicitó un commit de todo lo realizado hasta ahora, incluyendo los archivos que previamente se habían dejado sin versionar.
+- Alcance: aplicación 0.1 Symfony/Doctrine/SQLite y Angular; pruebas y CI; scripts PowerShell; análisis aprobado, referencia CLAUDE.md, README, handoff y bitácora; documentos de referencia y los cuatro skills adicionales docx/pdf/pptx/xlsx con sus recursos y licencias existentes.
+- Se revisaron el inventario, el estado de Git y las exclusiones. Herramientas, dependencias instaladas, bases de datos, cachés, logs y capturas permanecen ignorados. Los archivos .env incluidos contienen únicamente la configuración local/de pruebas documentada.
+- Se aplicó `commit-messages`: `feat: crear versión 0.1 de tareas con Symfony y Angular`, con cuerpo que detalla persistencia, pruebas, scripts, documentación y skills incluidos.
+- Validación funcional de referencia: `scripts/test.ps1` ya ejecutado correctamente en el paso 18, con 35 pruebas y comprobaciones de formato, análisis y compilación. No se han modificado el código funcional ni las dependencias desde esa ejecución. Los recursos de los skills importados se conservan; no se han ejecutado sus scripts como parte de esta validación.
+- Se comprobarán el contenido preparado y el estado de Git tras crear el commit. Operación local, sin un nuevo push; la confirmación y el hash se registrarán en la siguiente actualización de la bitácora.
+- La revisión de espacios detectó avisos preexistentes en los skills importados y dos documentos de referencia. Se conserva su contenido original; la comprobación del código de aplicación, scripts y documentación propia se realiza por separado. Se añadió a las exclusiones `backend/config/reference.php`, generado por Symfony, para no versionar ese artefacto.

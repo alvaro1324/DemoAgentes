@@ -67,3 +67,24 @@ Historial único del trabajo, las decisiones y las comprobaciones del proyecto. 
 - Se revisaron los tres archivos que se incluirán: `AGENTS.md`, `.agents/skills/commit-messages/SKILL.md` y `docs/bitacora.md`. No hay código de aplicación ni pruebas ejecutables todavía.
 - Se aplicó el skill `commit-messages` para redactar el resumen: `docs: añadir pautas del proyecto, bitácora y skill de commits`.
 - El commit se prepara en `main`, con alcance local y sin push. Su creación se comprobará con el último registro de Git y el estado del árbol de trabajo.
+
+### 10. Confirmación del primer commit y skill de continuidad
+
+- Se confirmó la creación del primer commit local: `06839bb`, con el resumen `docs: añadir pautas del proyecto, bitácora y skill de commits`. Tras su creación, el árbol de trabajo quedó limpio.
+- El usuario propuso un skill para mantener la bitácora y permitir continuar desde otro chat; después autorizó su creación.
+- Se creó `.agents/skills/project-log/SKILL.md` y se enlazó desde `AGENTS.md` para su uso al iniciar o retomar el trabajo y al registrar avances relevantes.
+- El skill indica cómo leer las instrucciones y la bitácora, contrastarlas con los archivos y Git, resumir el estado y añadir entradas al único historial. Conserva las decisiones anteriores y registra las correcciones en nuevas entradas.
+- Se estableció que los pendientes del historial no autorizan por sí mismos su ejecución. El skill tampoco abre chats ni ejecuta commits o push por mantener la bitácora.
+- Para registrar commits sin generar una cadena de commits de documentación, su confirmación y hash se incorporarán en la siguiente actualización del historial.
+- Comprobaciones: `quick_validate.py` devolvió `Skill is valid!`; revisión del contenido y comprobación de espacios del skill y de los cambios en la documentación.
+- Estado: el skill y las actualizaciones de instrucciones e historial están pendientes de commit. No se ha creado otro chat ni se ha realizado un nuevo commit. La aplicación continúa sin inicializar.
+
+### 11. Repositorio privado en GitHub y preparación del commit de continuidad
+
+- El usuario autorizó el commit de los últimos cambios y la creación del repositorio remoto.
+- Se revisaron los cambios de `project-log`, su enlace en `AGENTS.md` y el historial. Se redactó el mensaje `chore: añadir skill de bitácora y configurar el remoto de GitHub` con el skill `commit-messages`.
+- El conector disponible no ofrece creación de repositorios y `gh` no está instalado. Se utilizó la API de GitHub mediante la sesión existente de Git Credential Manager, sin instalar la CLI ni guardar credenciales en los archivos del proyecto.
+- Se comprobó la cuenta autenticada `alvaro1324` y que no existiera `DemoAgentes` en ella. Se creó el repositorio privado `https://github.com/alvaro1324/DemoAgentes` y se configuró como `origin` mediante HTTPS.
+- Se actualizó `AGENTS.md` para reflejar el remoto creado y retirar el estado anterior de trabajo exclusivamente local.
+- Comprobaciones: GitHub confirmó el nombre, la URL y la visibilidad privada; `git remote -v` confirmó `origin`. Se revisará el diff preparado y se comprobarán los espacios antes del commit.
+- Siguiente paso de esta operación: crear el commit, subir `main` a `origin` y verificar que coincidan las referencias local y remota. La confirmación del hash del commit se anotará en la siguiente actualización, conforme al skill de bitácora.

@@ -51,7 +51,7 @@ El candado de la pizarra representa `CLAUDE.md`: la referencia al diseño y al C
 6. Ejecutar las comprobaciones disponibles y revisar el diff.
 7. Preparar un resumen del cambio, las pruebas ejecutadas y las limitaciones para su revisión mediante PR.
 
-GitHub será la plataforma del repositorio remoto, la gestión de tareas mediante Issues y la revisión mediante PR. La conexión mediante MCP es opcional. Utilizar las integraciones únicamente si están configuradas y la tarea autoriza la operación. No inventar incidencias, resultados de herramientas ni referencias de PR. Por el momento, el repositorio se mantiene solo en local.
+GitHub es la plataforma del repositorio remoto, la gestión de tareas mediante Issues y la revisión mediante PR. El repositorio privado es `https://github.com/alvaro1324/DemoAgentes`, configurado como remoto `origin`. La conexión mediante MCP es opcional. Utilizar las integraciones únicamente si están configuradas y la tarea autoriza la operación. No inventar incidencias, resultados de herramientas ni referencias de PR.
 
 ## Criterios técnicos
 
@@ -99,7 +99,7 @@ Los comandos exactos de instalación, arranque, migraciones, pruebas y análisis
 
 - Motor de base de datos y necesidad de contenedores para desarrollo.
 - Herramienta de pruebas de extremo a extremo y proveedor de CI.
-- Configuración del repositorio remoto en GitHub y, si procede, de su integración mediante MCP.
+- Configuración de la integración con GitHub mediante MCP, si procede.
 - Requisitos adicionales, como prioridades, fechas límite o paginación; quedan fuera del MVP hasta acordarlos.
 
 ## Comunicación
@@ -111,5 +111,7 @@ Redactar la documentación y los resúmenes de trabajo en español. Utilizar ide
 Mantener al usuario informado de cada paso y actualizar automáticamente `docs/bitacora.md` con cada avance, decisión, corrección o comprobación relevante, sin esperar una petición adicional. Crear la carpeta y el archivo si no existen. Mantener un único fichero de historial, añadiendo entradas en orden cronológico con fecha, contexto, acciones, resultado, comprobaciones y puntos pendientes cuando correspondan. Conservar el historial anterior; registrar las correcciones en nuevas entradas. Distinguir los hechos confirmados de las suposiciones y no presentar trabajo propuesto como realizado. No guardar secretos ni datos sensibles en la bitácora.
 
 ## Skills del proyecto
+
+Al iniciar o retomar un chat en este repositorio y al registrar avances relevantes, utilizar el skill local `project-log`, definido en `.agents/skills/project-log/SKILL.md`. Leer la bitácora y contrastar su estado con los archivos y Git antes de continuar.
 
 Al preparar o revisar mensajes de commit, utilizar el skill local `commit-messages`, definido en `.agents/skills/commit-messages/SKILL.md`.

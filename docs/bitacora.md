@@ -88,3 +88,20 @@ Historial único del trabajo, las decisiones y las comprobaciones del proyecto. 
 - Se actualizó `AGENTS.md` para reflejar el remoto creado y retirar el estado anterior de trabajo exclusivamente local.
 - Comprobaciones: GitHub confirmó el nombre, la URL y la visibilidad privada; `git remote -v` confirmó `origin`. Se revisará el diff preparado y se comprobarán los espacios antes del commit.
 - Siguiente paso de esta operación: crear el commit, subir `main` a `origin` y verificar que coincidan las referencias local y remota. La confirmación del hash del commit se anotará en la siguiente actualización, conforme al skill de bitácora.
+
+### 12. Confirmación del push y handoff para otro chat
+
+- Se confirmó el commit `9406ca4`, `chore: añadir skill de bitácora y configurar el remoto de GitHub`, y su push a `origin/main`. Se verificó de nuevo mediante `git ls-remote` que ambas referencias coinciden en `9406ca43a26b7cb9522ee5f7d053398e499da58f`.
+- El usuario pidió un handoff para retomar desde otro chat y guardarlo en `docs/`. Se creó `docs/handoff.md` como guía del estado actual, con acuerdos, skills, commits, pendientes y un mensaje de reanudación. El historial sigue exclusivamente en esta bitácora.
+- Se detectaron seis documentos locales sin seguimiento de Git: `analisis-diseño.md`, `aprendizajes.md`, `ARQUITECTURA-AGENTES.md`, `ARQUITECTURA-AGENTES-V2.md`, `skills-orquestacion.md` y `skills-orquestacion-v2.md`, todos en `docs/`. Se conservaron sin cambios.
+- Se revisaron el análisis, los documentos V2 y aprendizajes completos, y las introducciones de los dos documentos originales de orquestación. Hay discrepancias respecto al proyecto acordado: .NET, código en castellano, React y un dominio de reservas de salas. Se documentaron como referencias pendientes de aclaración, sin cambiar el stack ni el alcance del proyecto.
+- Comprobaciones: lectura de instrucciones e historial, inventario de archivos, revisión de Git y del remoto. El handoff se revisó frente a esos datos y se comprobaron espacios en los documentos modificados.
+- Estado: el handoff y esta actualización quedan locales, pendientes de commit y push, junto con los seis documentos previamente sin versionar. El siguiente paso propuesto es reconciliar la documentación con el usuario antes de implementar; la aplicación sigue sin inicializar.
+
+### 13. Preparación del commit del handoff
+
+- El usuario pidió crear el commit de los últimos cambios.
+- Se revisaron `docs/handoff.md` y las nuevas entradas de esta bitácora. Se preparan únicamente estos dos archivos para conservar el punto de reanudación y la confirmación del push anterior.
+- Los seis documentos de referencia detectados en el paso anterior permanecen sin versionar y sin modificar, pendientes de reconciliar con el proyecto.
+- Mensaje elegido con `commit-messages`: `docs: añadir handoff para retomar el proyecto desde otro chat`.
+- Se comprobarán el diff preparado y los espacios antes del commit, y el último registro y el estado de Git después. Esta operación es local; no incluye un nuevo push.

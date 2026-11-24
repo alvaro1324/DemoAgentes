@@ -13,9 +13,9 @@ Versiones comprobadas: PHP 8.4.28, Symfony FrameworkBundle 7.4.23 LTS, Doctrine 
 - Carpeta: `D:\Sourcetree\DemoAgentes`; Windows y PowerShell.
 - GitHub privado: <https://github.com/alvaro1324/DemoAgentes>, remoto `origin`.
 - Rama: `main`, con seguimiento de `origin/main`.
-- Último commit local comprobado: `229eb8c`, `feat: crear versión 0.1 de tareas con Symfony y Angular`, pendiente de push junto con el handoff anterior.
+- Último commit funcional/documental comprobado antes de esta subida: `2cc761f`, `chore: añadir skill de modelo y documentar su revisión`, precedido por la versión 0.1 (`229eb8c`) y el handoff inicial (`a3baa52`).
 - Último commit remoto comprobado: `9406ca4`, skill de bitácora y configuración de GitHub.
-- El commit de todo el trabajo acumulado se completó en `229eb8c`: aplicación 0.1, aprobación documental, scripts, documentación y skills locales. No se ha realizado un nuevo push, etiqueta ni release. El skill `modelo` y su documentación se añadieron después y siguen pendientes de commit.
+- El skill `modelo` y su revisión ya están incluidos en `2cc761f`. El usuario ha solicitado subir los commits pendientes a GitHub; esta actualización documental acompaña la operación. Consultar Git para comprobar el resultado y el último hash; no se ha creado etiqueta ni release.
 - El commit solicitado incluye también los cuatro skills locales adicionales (`docx`, `pdf`, `pptx`, `xlsx`) y los documentos antiguos que estaban sin versionar. Se conservan como aportaciones existentes; versionarlos no convierte sus referencias a otros stacks o dominios en requisitos de esta aplicación.
 
 Contrastar siempre estas referencias con Git al retomar. Las peticiones anteriores de commit y push ya finalizaron; no autorizan publicaciones nuevas.

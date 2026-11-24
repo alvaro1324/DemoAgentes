@@ -194,3 +194,10 @@ Historial único del trabajo, las decisiones y las comprobaciones del proyecto. 
 - Se incluyen los hallazgos de la revisión anterior como pendientes documentados; este commit no corrige las referencias del skill ni modifica entidades, validaciones o tipos Angular.
 - Mensaje elegido con `commit-messages`: `chore: añadir skill de modelo y documentar su revisión`.
 - Se comprobarán los espacios del diff preparado y el estado de Git tras crear el commit. No se repetirá la batería de aplicación al no haber cambios funcionales. No se hará push.
+
+### 23. Preparación de la subida de los commits a GitHub
+
+- Se confirmó el commit local `2cc761f`, `chore: añadir skill de modelo y documentar su revisión`, y el árbol limpio tras su creación.
+- El usuario solicitó enviar el trabajo al repositorio remoto. Se comprobó que origin es `https://github.com/alvaro1324/DemoAgentes.git` y se ejecutó `git fetch origin` correctamente.
+- El recuento de divergencia mostró tres commits locales pendientes y ningún commit remoto nuevo: handoff, aplicación 0.1 y skill modelo. Se prepara además esta actualización de bitácora y handoff para incluir la trazabilidad de la operación.
+- Se usará un push normal de main, sin forzar ni crear etiquetas. Al terminar se comprobarán la coincidencia de los hashes local/remoto y el estado del árbol. El código funcional no ha cambiado desde las comprobaciones ya registradas.

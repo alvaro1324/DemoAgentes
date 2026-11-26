@@ -1,5 +1,5 @@
 ---
-name: project-log
+name: bitacora
 description: Retomar el contexto de este proyecto desde su bitácora y registrar avances, decisiones y comprobaciones en docs/bitacora.md. Usar al iniciar o retomar un chat en este repositorio y al completar pasos relevantes.
 ---
 
@@ -12,7 +12,7 @@ Utilizar `docs/bitacora.md` como único historial del proyecto. El objetivo es q
 1. Leer `AGENTS.md` y las instrucciones aplicables a los archivos de la tarea.
 2. Leer `docs/bitacora.md`. Si es extensa, empezar por las entradas recientes y buscar las decisiones anteriores relacionadas con el trabajo actual. No dar por leído contenido truncado.
 3. Contrastar el último estado registrado con `git status --short --branch`, `git log -5 --oneline` y los archivos relevantes. Si todavía no hay commits o repositorio Git, indicarlo y continuar con los archivos disponibles.
-4. Consultar `CLAUDE.md` y el diseño/CLOT si existen y son relevantes; no inventar su contenido si faltan.
+4. Consultar directamente el diseño/CLOT en `docs/analisis-diseño.md` y las decisiones en `docs/version-0.1.md` cuando sean relevantes; no inventar su contenido si faltan. Las instrucciones de Codex están en `AGENTS.md`.
 5. Resumir brevemente qué está hecho, qué queda pendiente, las discrepancias encontradas y el siguiente paso relacionado con la petición actual.
 
 La bitácora aporta contexto, no autorización nueva. Los pendientes registrados no son por sí mismos una orden para ejecutarlos. Continuar con el alcance solicitado por el usuario y respetar sus correcciones actuales. Las entradas más recientes pueden sustituir decisiones anteriores; comprobar el contexto antes de aplicar una decisión antigua.

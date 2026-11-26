@@ -1,5 +1,28 @@
 # Arquitectura de Agentes V2 — tstcln-reservas
 
+## Estado de aplicación en DemoAgentes
+
+El agente [`planificador`](../.codex/agents/planificador.toml) está definido para
+este repositorio; su uso y ensayos están en [planificador.md](planificador.md).
+Genera planes de la lista de tareas en `docs/plan-*.md`, con la excepción de
+escritura necesaria en `docs/bitacora.md` exigida por AGENTS.md. No implementa ni
+ejecuta verificaciones de la aplicación.
+
+Los agentes [`desarrollador_backend`](../.codex/agents/desarrollador_backend.toml)
+y [`desarrollador_frontend`](../.codex/agents/desarrollador_frontend.toml) implementan
+los tramos asignados de `backend/` y `frontend/`. Su coordinación por contrato,
+límites y ensayos se documentan en [agentes-desarrollo.md](agentes-desarrollo.md).
+El [`orquestador`](../.codex/agents/orquestador.toml) coordina los encargos y la
+integración; uso y límites en [orquestador.md](orquestador.md). El verificador
+sigue pendiente. Definir los roles no activa automáticamente el flujo completo
+ni autoriza commits o publicaciones. Las comprobaciones propias del orquestador
+y los desarrolladores no constituyen revisión independiente.
+
+El resto de este documento se conserva como referencia histórica de reservas de
+salas. Sus rutas, scripts `probar-*.ps1`, mapeos y flujo de publicación no definen
+el estado real ni amplían el alcance de DemoAgentes. Para el proyecto mandan
+AGENTS.md, `analisis-diseño.md`, `version-0.1.md` y los scripts existentes.
+
 Esta versión V2 adapta la arquitectura de agentes al proyecto real (`Symfony + Angular`) y reemplaza referencias de `.NET` por el flujo técnico actual.
 
 La versión anterior se mantiene intacta en [docs/ARQUITECTURA-AGENTES.md](docs/ARQUITECTURA-AGENTES.md).

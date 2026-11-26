@@ -31,6 +31,18 @@ Las versiones transitivas exactas están fijadas en los archivos de bloqueo. Alg
 - El listado se ordena por id descendente (creación más reciente primero). Filtrado en backend y en la interfaz; los contadores de la interfaz se calculan sobre el listado completo.
 - El borrado es físico. La edición parcial conserva los campos no enviados; description=null elimina la descripción.
 - Se valida el cuerpo completo antes de mutar la entidad, de modo que un campo inválido no produce cambios parciales.
+- La entidad `Task` también normaliza y valida el título y limita la descripción al crear o actualizar, aunque se utilice fuera de la API. Lanza `InvalidArgumentException` si incumplen esas reglas; una actualización rechazada conserva el estado y las fechas anteriores. La validación HTTP mantiene su formato de errores por campo.
+
+## Ampliación del modelo: categorías
+
+Solicitada el 24 de noviembre de 2026 y descrita en la sección 4 de `analisis-diseño.md`. La aprobación original del MVP no se presenta como firma de esta ampliación.
+
+- Entidad `Category` con id entero generado y name obligatorio de 1 a 100 caracteres Unicode, normalizado sin espacios en los extremos. No se exige nombre único.
+- `Task.category`: relación opcional ManyToOne con atributos PHP; `getCategory()` y `assignCategory(?Category)` permiten consultar, asignar, sustituir o quitar la categoría. Asignarla actualiza updatedAt sin modificar el resto de la tarea.
+- `CategoryRepository` ofrece las operaciones estándar de Doctrine. `Category.rename()` valida antes de cambiar el nombre.
+- Migración `Version20261124124702`: crea category, añade task.category_id nullable, índice y clave foránea ON DELETE RESTRICT. Conserva las tareas anteriores sin categoría. La reversión elimina categorías y asociaciones, conservando los campos originales de las tareas.
+- El middleware de DBAL `EnableForeignKeys` activa las claves foráneas en las conexiones SQLite. No hay persistencia ni borrado en cascada; un servicio futuro debe validar el uso de una categoría antes de borrarla y ofrecer un error comprensible.
+- Alcance de este paso: modelo, persistencia y pruebas añadidas sin ejecutar. La API y Angular todavía no gestionan categorías; `Task.toArray()` mantiene el contrato existente y no expone la relación.
 
 ## API implementada
 

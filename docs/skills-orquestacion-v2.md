@@ -2,6 +2,8 @@
 
 ## Aplicación en DemoAgentes
 
+El tramo de análisis está implementado en [`analisis-diseno`](../.agents/skills/analisis-diseno/SKILL.md), invocable como `$analisis-diseno`. Define y revisa alcance, reglas, contratos y criterios en `docs/analisis-diseño.md`, contrastando las decisiones de `docs/version-0.1.md`. No implementa la aplicación ni ejecuta automáticamente los siguientes tramos.
+
 El contenido de reservas que sigue se conserva como referencia. En DemoAgentes, el skill local implementado para el tramo de modelo es [`modelo`](../.agents/skills/modelo/SKILL.md), invocable como `$modelo`. Lee el README, el análisis aprobado y `docs/version-0.1.md`, y trabaja sobre las entidades de `backend/src/Entity/` con atributos Doctrine.
 
 Su salida son los cambios del modelo y las pruebas pertinentes, las migraciones necesarias cuando cambia el esquema y la evaluación del impacto en validación, JSON y tipos Angular. Se integra después del análisis y antes de las adaptaciones de persistencia, API y frontend que correspondan; no ejecuta por sí mismo toda la orquestación ni presupone otros skills instalados. Las rutas, el dominio de reservas y los catálogos del resto de este documento no describen requisitos nuevos de DemoAgentes.

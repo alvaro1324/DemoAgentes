@@ -26,7 +26,7 @@ Elige el modo según el argumento:
 
 ## Lugar en la orquestación de skills
 
-Sigue el modelo de `docs/skills-orquestacion.md` y `docs/skills-orquestacion-v2.md`: cada skill cubre un tramo de capas, lee los artefactos anteriores como fuente de verdad y nunca inventa contratos ni reglas. Ese esquema venía de otros proyectos; aquí se adapta al CLAUDE.md (capas `Controller → Service → Repository → Entity`, mapeo con atributos y no con XML).
+Sigue el modelo de `docs/skills-orquestacion.md` y `docs/skills-orquestacion-v2.md`: cada skill cubre un tramo de capas, lee los artefactos anteriores como fuente de verdad y nunca inventa contratos ni reglas. Ese esquema venía de otros proyectos; aquí se adapta a `AGENTS.md` para trabajar exclusivamente con Codex (capas `Controller → Service → Repository → Entity`, mapeo con atributos y no con XML).
 
 ```
 análisis firmado ──► modelo ──► DTO y validación ──► servicios ──► controladores/API ──► frontend ──► pruebas ──► commit
@@ -50,9 +50,9 @@ análisis firmado ──► modelo ──► DTO y validación ──► servici
 
 ## 0. Antes de tocar nada (todos los modos que escriben)
 
-1. **Lee** el CLAUDE.md, la sección 3 de `docs/analisis.md`, las reglas RN de `docs/app/lista-de-tareas.md` que cite cada campo y los ADR de `docs/decisiones/`.
+1. **Lee** `AGENTS.md`, el modelo de la sección 4 de `docs/analisis-diseño.md` y `docs/version-0.1.md`. Consulta reglas RN y ADR solo si existen y aplican al cambio; no inventes fuentes ni requisitos.
 2. **Issue:** no se implementa nada sin issue de GitHub. Identifica el issue (`gh issue view <nº>`) y trabaja en su rama `feature/<nº>-descripcion`. Si no hay issue para el cambio, detente y propón crearlo.
-3. **Firmas:** comprueba la sección "Firmas" del CLAUDE.md. Si la regla de bloqueo está activa y el análisis o el backlog no están firmados, detente y pide la firma. Si está suspendida, sigue, pero anota lo que quede pendiente de firma.
+3. **Firmas:** consulta el estado documental en `docs/analisis-diseño.md` y las instrucciones de `AGENTS.md`. Distingue la aprobación original de las ampliaciones y registra las firmas pendientes. No presupongas bloqueos de firma que no estén establecidos en las instrucciones vigentes.
 4. **Estado del repositorio:** `git status --short`. No mezcles el modelo con cambios ajenos.
 
 ---
@@ -160,7 +160,7 @@ php bin/console doctrine:migrations:migrate --no-interaction
 - Un test unitario por entidad con reglas: `tests/Unit/Entity/<Entidad>Test.php`, con un método `test<Comportamiento>` por caso y la regla en el nombre o en un comentario (`testCompleteTwiceThrows` → RN-11).
 - Cubre cada método de dominio: el camino feliz y la excepción de cada regla.
 - Los métodos de repositorio con consultas propias se prueban en `tests/Functional/Repository/`.
-- Si PHPUnit todavía no está instalado (issue #2), dilo en la entrega y no abras la PR: el CLAUDE.md prohíbe abrir PR con tests sin pasar.
+- Si PHPUnit no está instalado o los tests no se han ejecutado, indícalo en la entrega. Sigue `AGENTS.md` y las indicaciones del usuario para las verificaciones; no declares tests superados sin ejecutarlos.
 
 ## Verificación
 

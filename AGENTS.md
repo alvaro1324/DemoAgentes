@@ -18,6 +18,8 @@ Este archivo guía el trabajo de los agentes en todo el repositorio. La versión
 
 Modelo inicial propuesto: `Task`, con identificador, título, descripción, estado de finalización y fechas de creación y última modificación. Los límites de los campos y las reglas de validación se definirán antes de implementar el contrato de la API.
 
+Ampliación solicitada: categorías mediante la entidad `Category` y una relación opcional muchos a uno desde `Task`, con mapeo por atributos Doctrine. El detalle está en la sección 4 de `docs/analisis-diseño.md` y en `docs/version-0.1.md`; la gestión de categorías en API y Angular queda pendiente.
+
 ## Stack y estructura prevista
 
 - Backend: PHP y Symfony, con una API HTTP JSON.
@@ -41,9 +43,9 @@ Antes de instalar dependencias, comprobar las herramientas disponibles y elegir 
 
 El flujo del proyecto conecta documentación, análisis, tareas en GitHub Issues, desarrollo de la aplicación y una PR en GitHub. Los criterios de aceptación deben acompañar cada paso.
 
-El candado de la pizarra representa `CLAUDE.md`: la referencia al diseño y al CLOT que define en qué consiste el proyecto. El desarrollo debe partir de esa definición y respetar su alcance y criterios. Esta referencia no implica un requisito de autenticación o autorización. `CLAUDE.md` referencia el análisis aprobado y las decisiones concretas de la versión 0.1.
+El trabajo de agentes se realiza exclusivamente con Codex, guiado por `AGENTS.md` y los skills locales de `.agents/skills/`. Consultar directamente el diseño/CLOT en `docs/analisis-diseño.md` y las decisiones en `docs/version-0.1.md`, respetando su alcance y criterios. El candado de la pizarra representa esa referencia documental y no implica autenticación o autorización.
 
-1. Leer el diseño/CLOT y `CLAUDE.md` cuando estén disponibles, además de la documentación y el código relacionados con el cambio.
+1. Leer `AGENTS.md`, `docs/analisis-diseño.md` y `docs/version-0.1.md`, además de la documentación y el código relacionados con el cambio.
 2. Convertir la necesidad en una tarea concreta con alcance y criterios de aceptación verificables.
 3. Registrar el análisis y las decisiones necesarias antes de implementar. Si existe una tarea en GitHub Issues, conservar su referencia.
 4. Implementar un cambio acotado, siguiendo las convenciones existentes.
@@ -57,6 +59,7 @@ GitHub es la plataforma del repositorio remoto, la gestión de tareas mediante I
 
 - Mantener los controladores Symfony pequeños; separar la lógica de negocio cuando su complejidad lo justifique.
 - Gestionar la persistencia mediante Doctrine y registrar los cambios del esquema en migraciones versionadas.
+- Definir el mapeo del modelo mediante atributos PHP de Doctrine ORM en las entidades de `backend/src/Entity/`, usando `Doctrine\ORM\Mapping as ORM` y atributos como `#[ORM\Entity]`, `#[ORM\Column]` y los de relaciones. Mantener esta convención al crear o modificar el modelo.
 - Validar las entradas en el backend y ofrecer validación equivalente en los formularios para facilitar su uso.
 - Definir respuestas JSON y códigos HTTP coherentes, incluidos los errores de validación y los recursos inexistentes.
 - Centralizar las llamadas HTTP de Angular en servicios tipados y evitar duplicar el estado sin necesidad.
@@ -80,7 +83,7 @@ Los comandos exactos de instalación, arranque, migraciones, pruebas y análisis
 
 ## Lista inicial de tareas
 
-- [x] Incorporar o referenciar el diseño/CLOT del proyecto en `CLAUDE.md` y alinear estas instrucciones con su contenido.
+- [x] Referenciar directamente el diseño/CLOT desde `AGENTS.md` y alinear las instrucciones de Codex con su contenido.
 - [x] Confirmar el alcance del MVP y redactar sus criterios de aceptación: análisis aprobado por el usuario el 24 de noviembre de 2026 en `docs/analisis-diseño.md`, con las decisiones pendientes allí indicadas.
 - [x] Elegir versiones de PHP, Symfony, Doctrine, Node.js y Angular compatibles.
 - [x] Elegir el motor de base de datos y documentar el entorno local.
@@ -109,9 +112,52 @@ Redactar la documentación y los resúmenes de trabajo en español. Utilizar ide
 
 Mantener al usuario informado de cada paso y actualizar automáticamente `docs/bitacora.md` con cada avance, decisión, corrección o comprobación relevante, sin esperar una petición adicional. Crear la carpeta y el archivo si no existen. Mantener un único fichero de historial, añadiendo entradas en orden cronológico con fecha, contexto, acciones, resultado, comprobaciones y puntos pendientes cuando correspondan. Conservar el historial anterior; registrar las correcciones en nuevas entradas. Distinguir los hechos confirmados de las suposiciones y no presentar trabajo propuesto como realizado. No guardar secretos ni datos sensibles en la bitácora.
 
+## Agente planificador
+
+El agente del proyecto `planificador` se define en `.codex/agents/planificador.toml`.
+Usarlo cuando se solicite explícitamente ese agente o la planificación de un cambio
+como paso independiente. Entrega `docs/plan-*.md` y registra el resultado en la
+bitácora; su trabajo termina con el plan y las dudas. No implementa, ejecuta
+pruebas ni delega en otros agentes. Instrucciones y pruebas de uso en
+[`docs/planificador.md`](docs/planificador.md). Solicitar un plan no activa
+automáticamente otros agentes.
+
+## Agentes de desarrollo
+
+`desarrollador_backend` y `desarrollador_frontend` se definen respectivamente en
+`.codex/agents/desarrollador_backend.toml` y
+`.codex/agents/desarrollador_frontend.toml`. Implementan solo el tramo asignado de
+un plan o encargo con criterios definidos, dentro de `backend/` o `frontend/`.
+Las decisiones de contrato pendientes se resuelven antes de la parte dependiente.
+
+Pueden trabajar en paralelo con contrato acordado y archivos disjuntos. Designar
+un único escritor de documentación compartida y bitácora; si el padre asume el
+registro, cada desarrollador le devuelve su resumen y el padre lo incorpora.
+En ejecución autónoma se mantiene el registro directo conforme a `bitacora`.
+Sus comprobaciones propias no constituyen una revisión independiente. No crean
+otros agentes ni realizan commits o publicaciones. Uso y ensayos en
+[`docs/agentes-desarrollo.md`](docs/agentes-desarrollo.md). El verificador sigue
+pendiente.
+
+## Agente orquestador
+
+`orquestador` se define en `.codex/agents/orquestador.toml`. Coordina el encargo
+autorizado con los roles disponibles, delimita archivos y contrato, controla
+dependencias e integra documentación y resultados. Solo planificación termina
+con el plan; la implementación requiere estar incluida en el encargo.
+
+Centraliza la bitácora de los desarrolladores y espera el registro propio del
+planificador antes de escribir en ella. El paralelismo exige contrato resuelto,
+archivos disjuntos y recursos de pruebas compatibles. No sustituye al verificador
+pendiente ni publica sin encargo. Uso, límites y ensayos en
+[`docs/orquestador.md`](docs/orquestador.md). Definir el rol no acredita que una
+sesión existente lo exponga; comprobar disponibilidad antes de invocarlo.
+
 ## Skills del proyecto
 
-Al iniciar o retomar un chat en este repositorio y al registrar avances relevantes, utilizar el skill local `project-log`, definido en `.agents/skills/project-log/SKILL.md`. Leer la bitácora y contrastar su estado con los archivos y Git antes de continuar.
+Al definir o revisar funcionalidades, alcance, reglas de negocio, contratos o criterios de aceptación, utilizar el skill local `analisis-diseno`, definido en `.agents/skills/analisis-diseno/SKILL.md`. Mantiene `docs/analisis-diseño.md` y distingue el diseño aprobado, los cambios propuestos y lo implementado antes de pasar al código.
+
+Al iniciar o retomar un chat en este repositorio y al registrar avances relevantes, utilizar el skill local `bitacora`, definido en `.agents/skills/bitacora/SKILL.md`. Leer la bitácora y contrastar su estado con los archivos y Git antes de continuar.
 
 Al preparar o revisar mensajes de commit, utilizar el skill local `commit-messages`, definido en `.agents/skills/commit-messages/SKILL.md`.
 

@@ -2,6 +2,8 @@
 
 ## Aprobación documental
 
+Estado de la ampliación de categorías del 24 de noviembre de 2026: pendiente de nueva firma documental. El usuario solicitó su implementación mediante `/modelo agrega categorias de tareas`; la aprobación original que sigue corresponde al MVP anterior a esta ampliación.
+
 Aprobado por el usuario del proyecto el 24 de noviembre de 2026 (Europe/Madrid), mediante la declaración en el chat: «apruebo la documentacion, la firmo».
 
 Esta aprobación establece el análisis adaptado a PHP, Symfony, Doctrine y Angular como base documental para el desarrollo, con el MVP y los criterios de aceptación descritos. Las decisiones expresamente pendientes conservan ese estado; plantillas y recurrencia siguen como ampliaciones por confirmar. El registro recoge la conformidad expresada en el chat.
@@ -78,10 +80,27 @@ Convenciones: identificadores en inglés, documentación y mensajes de usuario e
 | isCompleted | boolean | false al crear, salvo cambio del contrato acordado |
 | createdAt | Fecha y hora inmutable | Asignada por el backend al crear |
 | updatedAt | Fecha y hora inmutable | Asignada al crear y actualizada al modificar |
+| category | Category o null | Relación opcional muchos a uno; las tareas existentes conservan null |
 
 En PHP, representar las fechas con DateTimeImmutable. Propuesta de intercambio: fechas ISO 8601 con zona explícita y almacenamiento normalizado a UTC; presentación en la zona del usuario. Concretar precisión y formato antes de implementar.
 
 No permitir que el cliente modifique identificadores o fechas de auditoría. La versión 0.1 materializa este modelo en `backend/src/Entity/Task.php` y su migración inicial.
+
+### Ampliación: categorías de tareas
+
+Solicitada el 24 de noviembre de 2026. En este paso se implementan el modelo y la persistencia, con atributos PHP de Doctrine. La gestión HTTP y Angular queda pendiente; el contrato de tareas de la versión 0.1 se conserva.
+
+| Campo de Category | Tipo | Regla |
+| --- | --- | --- |
+| id | int | Generado por la base de datos |
+| name | string | Obligatorio, sin espacios en los extremos, entre 1 y 100 caracteres Unicode |
+
+- Cada tarea tiene cero o una categoría; una categoría puede utilizarse en varias tareas. La relación es unidireccional desde `Task`.
+- Se puede asignar, cambiar o quitar la categoría de una tarea; la operación actualiza `updatedAt` y conserva el resto del contenido y el estado.
+- Renombrar una categoría conserva su identidad y las asociaciones. Un nombre inválido se rechaza antes de mutar el objeto. No se exige unicidad de nombres en este alcance.
+- La clave foránea `task.category_id` es nullable y utiliza `ON DELETE RESTRICT`. No hay borrado en cascada de tareas ni persistencia en cascada de categorías; la categoría se persiste explícitamente antes de guardar una tarea que la referencia. Un servicio futuro debe comprobar el uso antes del borrado y presentar el error al usuario. SQLite requiere activar sus claves foráneas en cada conexión para aplicar la restricción.
+- La migración es aditiva y conserva las tareas existentes. No se crean categorías predefinidas ni se asignan automáticamente.
+- Criterios de aceptación del modelo: rechazar nombres vacíos o de más de 100 caracteres; aceptar el límite Unicode; asignar, sustituir y quitar categorías sin alterar los demás campos; conservar el nombre tras un renombrado inválido; mapeo y esquema sincronizados tras migrar. Los tests se añaden sin ejecutarlos por la indicación vigente del usuario.
 
 ## 5. Contrato preliminar de API
 
@@ -164,7 +183,7 @@ Los comandos reales de instalación, arranque y pruebas de la versión 0.1 está
 - Confirmar si plantillas y recurrencia forman parte de una siguiente fase.
 - Elegir herramientas de pruebas Angular, extremo a extremo y CI.
 - Autenticación, paginación, prioridades, búsqueda y fechas límite quedan fuera del MVP actual, salvo acuerdo posterior.
-- Incorporar o referenciar el diseño/CLOT en CLAUDE.md. Esta adaptación no crea ese archivo.
+- Mantener el diseño/CLOT referenciado directamente desde `AGENTS.md`, que guía el trabajo con Codex.
 
 Las decisiones necesarias para el MVP se concretaron al implementar la versión 0.1 en [version-0.1.md](version-0.1.md). Las ampliaciones funcionales siguen pendientes de acuerdo posterior.
 

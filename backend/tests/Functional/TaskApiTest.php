@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional;
 
+use App\Entity\Category;
 use App\Entity\Task;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool;
@@ -23,7 +24,7 @@ final class TaskApiTest extends WebTestCase
         $path = $em->getConnection()->getParams()['path'] ?? '';
         self::assertStringEndsWith('tasks_test.db', $path, 'La limpieza solo se permite en la base de pruebas.');
         $schema = new SchemaTool($em);
-        $metadata = [$em->getClassMetadata(Task::class)];
+        $metadata = [$em->getClassMetadata(Category::class), $em->getClassMetadata(Task::class)];
         $schema->dropSchema($metadata);
         $schema->createSchema($metadata);
     }

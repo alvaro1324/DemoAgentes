@@ -4,6 +4,7 @@ services:
     _defaults:
         autowire: true
         autoconfigure: true
+    Doctrine\DBAL\Driver\AbstractSQLiteDriver\Middleware\EnableForeignKeys: ~
     App\:
         resource: '../src/'
         exclude:

@@ -13,19 +13,19 @@ Versiones comprobadas: PHP 8.4.28, Symfony FrameworkBundle 7.4.23 LTS, Doctrine 
 - Carpeta: `D:\Sourcetree\DemoAgentes`; Windows y PowerShell.
 - GitHub privado: <https://github.com/alvaro1324/DemoAgentes>, remoto `origin`.
 - Rama: `main`, con seguimiento de `origin/main`.
-- Último commit funcional/documental comprobado antes de esta subida: `2cc761f`, `chore: añadir skill de modelo y documentar su revisión`, precedido por la versión 0.1 (`229eb8c`) y el handoff inicial (`a3baa52`).
-- Último commit remoto comprobado: `9406ca4`, skill de bitácora y configuración de GitHub.
-- El skill `modelo` y su revisión ya están incluidos en `2cc761f`. El usuario ha solicitado subir los commits pendientes a GitHub; esta actualización documental acompaña la operación. Consultar Git para comprobar el resultado y el último hash; no se ha creado etiqueta ni release.
+- Último commit local y remoto comprobado: `5bf0b27`, `docs: registrar la subida de la versión 0.1 y el skill modelo`. La subida anterior terminó correctamente; no se ha creado etiqueta ni release.
+- Cambios locales posteriores: `Task` protege los límites del título y la descripción y evita modificaciones parciales cuando fallan esas validaciones. Se añadieron pruebas unitarias, pero el usuario pidió expresamente no ejecutarlas en este paso. Sintaxis PHP, PHPStan y mapeo/esquema Doctrine comprobados correctamente; no se necesita una migración nueva.
 - El commit solicitado incluye también los cuatro skills locales adicionales (`docx`, `pdf`, `pptx`, `xlsx`) y los documentos antiguos que estaban sin versionar. Se conservan como aportaciones existentes; versionarlos no convierte sus referencias a otros stacks o dominios en requisitos de esta aplicación.
 
 Contrastar siempre estas referencias con Git al retomar. Las peticiones anteriores de commit y push ya finalizaron; no autorizan publicaciones nuevas.
 
 ## Archivos para retomar
 
+El trabajo se realiza exclusivamente con Codex, guiado por `AGENTS.md`, el análisis y los skills locales.
+
 | Archivo o carpeta | Función |
 | --- | --- |
 | `AGENTS.md` | Reglas comunes, alcance y lista de tareas actualizada |
-| `CLAUDE.md` | Referencia al análisis/CLOT aprobado |
 | `docs/analisis-diseño.md` | Diseño aprobado por el usuario el 24 de noviembre de 2026 |
 | `docs/version-0.1.md` | Versiones, límites, contrato API y exclusiones concretas |
 | `README.md` | Instalación, arranque, datos y verificaciones |
@@ -34,11 +34,27 @@ Contrastar siempre estas referencias con Git al retomar. Las peticiones anterior
 | `scripts/` | Instalación, arranque/parada y comprobaciones en PowerShell |
 | `.github/workflows/ci.yml` | Comprobaciones de GitHub Actions; ejecución remota pendiente |
 
-Usar `project-log` desde `.agents/skills/project-log/SKILL.md` para recuperar contexto y mantener la bitácora. Usar `commit-messages` desde `.agents/skills/commit-messages/SKILL.md` al preparar mensajes de commit.
+Usar `bitacora` desde `.agents/skills/bitacora/SKILL.md` para recuperar contexto y mantener la bitácora. Usar `commit-messages` desde `.agents/skills/commit-messages/SKILL.md` al preparar mensajes de commit.
+
+Para definir, actualizar o revisar el diseño funcional y técnico, usar `$analisis-diseno`, definido en `.agents/skills/analisis-diseno/SKILL.md`. Trabaja sobre `docs/analisis-diseño.md`, con criterios de aceptación y evaluación del impacto; distingue propuestas, aprobaciones e implementación antes de pasar al skill `modelo`.
 
 Para crear o actualizar entidades, campos, relaciones e invariantes, usar `$modelo`, definido en `.agents/skills/modelo/SKILL.md`. Se creó a partir del README, análisis, decisiones de la 0.1, código actual y documentos de orquestación. Su integración específica de DemoAgentes está documentada al principio de `docs/skills-orquestacion-v2.md`; el resto de ese documento conserva ejemplos de otro proyecto.
 
 ## Arranque y verificación
+
+Agente de proyecto añadido: `planificador`, definido en
+`.codex/agents/planificador.toml`. Solo genera `docs/plan-*.md` y registra su trabajo
+en la bitácora; no implementa, ejecuta pruebas ni activa otros agentes. Consultar
+`docs/planificador.md` para uso y ensayo con el filtrado por estado ya desarrollado.
+También se añaden `desarrollador_backend` y `desarrollador_frontend` en
+`.codex/agents/`, con ámbitos backend/frontend y coordinación mediante contrato
+resuelto, archivos disjuntos y escritor único del registro compartido. Consultar
+`docs/agentes-desarrollo.md`. Se añade `orquestador` en `.codex/agents/orquestador.toml`
+para coordinar encargos, dependencias, documentación y comprobaciones; consultar
+`docs/orquestador.md`. El verificador sigue pendiente. Solicitar solo un plan no
+activa implementación. La selección nativa del orquestador sigue sin ensayar;
+los resultados de comprobaciones se registran en
+`docs/bitacora.md`.
 
 Desde la raíz, `./scripts/install.ps1` instala las dependencias y aplica la migración. `./scripts/start.ps1` sirve la interfaz en http://127.0.0.1:4200 y la API en http://127.0.0.1:8000/api/tasks. `./scripts/stop.ps1` detiene los procesos propios. Las herramientas locales están en `.tools/`, los logs en `.runtime/`; ambas carpetas están ignoradas por Git.
 
@@ -50,6 +66,11 @@ Bases separadas: `backend/var/tasks.db` para uso local, `tasks_test.db` para PHP
 
 ## Pendientes y límites
 
+- Categorías añadidas al modelo: `Category` (id/name), repositorio y relación opcional `Task.category`, mapeados con atributos. Migración `Version20261124124702` aplicada localmente; SQLite tiene activadas las claves foráneas con el middleware de DBAL. Hay copia previa de la base en `.runtime/`. No hay gestión de categorías en API ni Angular todavía. Análisis actualizado en su sección 4; la ampliación está pendiente de nueva firma documental, sin atribuirle la aprobación original del MVP.
+- Los tests nuevos de categorías y persistencia y la adaptación del esquema de `TaskApiTest` se han escrito sin ejecutar, respetando la indicación del usuario. No interpretar la migración aplicada como una batería de pruebas superada.
+- Ejecutar las pruebas del último cambio cuando el usuario lo solicite; por ahora no se ha verificado su comportamiento mediante tests. Los resultados anteriores del MVP no validan estos cambios nuevos.
+- El skill `modelo` conserva algunas referencias antiguas a fuentes inexistentes (`docs/analisis.md`, reglas RN y ADR); las fuentes vigentes son `AGENTS.md`, `docs/analisis-diseño.md` y `docs/version-0.1.md`. Pendiente completar la alineación de esas instrucciones. No incorporar plantillas, recurrencia ni reglas RN sin aprobar.
+- El tipo Angular `CreateTask` todavía exige `description`, aunque la API permite omitirla. Queda fuera del cambio de entidad actual.
 - Confirmar con el usuario cualquier ampliación: plantillas y recurrencia no forman parte de la 0.1. Tampoco cuentas, paginación ni dominio de reservas.
 - Revisar el diff del MVP y publicarlo solo cuando se solicite. Ejecutar CI remota tras publicarlo.
 - Adaptar los documentos antiguos: `ARQUITECTURA-AGENTES.md`, `skills-orquestacion.md` y sus variantes V2 todavía describen C#, React o reservas de salas y rutas que no corresponden a esta aplicación.
@@ -61,9 +82,9 @@ Bases separadas: `backend/var/tasks.db` para uso local, `tasks_test.db` para PHP
 
 ```text
 Retoma DemoAgentes en D:\Sourcetree\DemoAgentes.
-Lee AGENTS.md, docs/handoff.md, docs/version-0.1.md y el skill project-log.
+Lee AGENTS.md, docs/handoff.md, docs/version-0.1.md y el skill bitacora.
 Consulta docs/bitacora.md y contrasta el estado con Git.
-La versión 0.1 del MVP ya está implementada y sigue pendiente de commit/push.
+La versión 0.1 del MVP ya está publicada en GitHub. Hay cambios locales de validación en Task y pruebas añadidas que el usuario pidió no ejecutar. Comprueba Git y la bitácora antes de continuar.
 Resume el estado y los siguientes pasos; mantén actualizada la bitácora.
 No adoptes los documentos antiguos de .NET o reservas como requisitos nuevos.
 Espera mi siguiente tarea tras el resumen.

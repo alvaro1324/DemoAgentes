@@ -1,0 +1,73 @@
+{
+  "description": "Observador local de DemoAgentes. Solo metadatos de ciclo de vida; no modifica decisiones del agente.",
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node -e \"const cp=require('node:child_process');const p=require('node:path');const r=cp.execFileSync('git',['rev-parse','--show-toplevel'],{encoding:'utf8'}).trim();cp.execFileSync(process.execPath,[p.join(r,'tools/orchestrator-monitor/hook.mjs')],{stdio:'inherit'});\"",
+            "timeout": 3
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node -e \"const cp=require('node:child_process');const p=require('node:path');const r=cp.execFileSync('git',['rev-parse','--show-toplevel'],{encoding:'utf8'}).trim();cp.execFileSync(process.execPath,[p.join(r,'tools/orchestrator-monitor/hook.mjs')],{stdio:'inherit'});\"",
+            "timeout": 3
+          }
+        ]
+      }
+    ],
+    "SubagentStart": [
+      {
+        "matcher": "^(orquestador|planificador|desarrollador_backend|desarrollador_frontend|verificador)$",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node -e \"const cp=require('node:child_process');const p=require('node:path');const r=cp.execFileSync('git',['rev-parse','--show-toplevel'],{encoding:'utf8'}).trim();cp.execFileSync(process.execPath,[p.join(r,'tools/orchestrator-monitor/hook.mjs')],{stdio:'inherit'});\"",
+            "timeout": 3
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "matcher": "^(orquestador|planificador|desarrollador_backend|desarrollador_frontend|verificador)$",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node -e \"const cp=require('node:child_process');const p=require('node:path');const r=cp.execFileSync('git',['rev-parse','--show-toplevel'],{encoding:'utf8'}).trim();cp.execFileSync(process.execPath,[p.join(r,'tools/orchestrator-monitor/hook.mjs')],{stdio:'inherit'});\"",
+            "timeout": 3
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node -e \"const cp=require('node:child_process');const p=require('node:path');const r=cp.execFileSync('git',['rev-parse','--show-toplevel'],{encoding:'utf8'}).trim();cp.execFileSync(process.execPath,[p.join(r,'tools/orchestrator-monitor/hook.mjs')],{stdio:'inherit'});\"",
+            "timeout": 3
+          }
+        ]
+      }
+    ],
+    "Interrupt": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node -e \"const cp=require('node:child_process');const p=require('node:path');const r=cp.execFileSync('git',['rev-parse','--show-toplevel'],{encoding:'utf8'}).trim();cp.execFileSync(process.execPath,[p.join(r,'tools/orchestrator-monitor/hook.mjs')],{stdio:'inherit'});\"",
+            "timeout": 3
+          }
+        ]
+      }
+    ]
+  }
+}

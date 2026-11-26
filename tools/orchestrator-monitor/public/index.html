@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Agentes en marcha · DemoAgentes</title>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <header>
+      <a class="brand" href="/">DA <span>DemoAgentes</span></a
+      ><span id="connection" role="status">Conectando…</span>
+    </header>
+    <div class="layout">
+      <aside class="library" aria-label="Biblioteca de procesos">
+        <div class="library-title">
+          <h2>Procesos</h2>
+          <span id="recording-count">0</span>
+        </div>
+        <label for="mode">Mostrar</label
+        ><select id="mode">
+          <option value="real">Procesos reales</option>
+          <option value="demo">Demostraciones</option>
+        </select>
+        <div id="recordings"></div>
+        <p id="empty-library" class="muted">
+          Aquí aparecerá cada proceso al recibir su primer evento.
+        </p>
+        <p class="library-help">
+          Las grabaciones se guardan automáticamente en este equipo.
+        </p>
+      </aside>
+      <main>
+        <div class="page-heading">
+          <div>
+            <p class="eyebrow">AGENTES EN MARCHA</p>
+            <h1 id="process-title">Elige un proceso</h1>
+            <p id="process-meta" class="muted">
+              En directo o paso a paso, a tu ritmo.
+            </p>
+          </div>
+          <a id="download" class="button secondary" hidden
+            >Descargar grabación</a
+          >
+        </div>
+        <p id="storage-error" role="alert" hidden></p>
+        <p id="notice" class="notice" hidden></p>
+        <section
+          class="current"
+          aria-label="Qué está pasando"
+          aria-live="polite"
+        >
+          <div class="current-heading">
+            <span id="view-mode" class="badge">En directo</span
+            ><span id="state">Sin eventos</span><time id="updated"></time>
+          </div>
+          <h2 id="now-role">Esperando actividad</h2>
+          <p id="now-message">
+            Selecciona un proceso de la biblioteca para ver qué hace cada
+            agente.
+          </p>
+          <p id="now-decision" class="decision" hidden></p>
+          <p id="activity-origin" class="muted"></p>
+        </section>
+        <div class="observation">
+          <div class="diagram-stack">
+            <section class="diagram-panel" aria-labelledby="diagram-title">
+              <div class="section-heading">
+                <h2 id="diagram-title">Quién está trabajando</h2>
+                <div class="legend">
+                  <span><i class="dot active-dot"></i>En actividad</span
+                  ><span><i class="dot visited-dot"></i>Ya participó</span
+                  ><span
+                    ><i class="dot stage-dot"></i>Etapa sin actividad
+                    registrada</span
+                  >
+                </div>
+              </div>
+              <div
+                id="diagram"
+                aria-label="Cinco agentes y sus responsabilidades"
+              ></div>
+              <p id="diagram-error" role="alert" hidden></p>
+              <p id="active-summary" class="diagram-caption">
+                Ningún agente activo registrado.
+              </p>
+            </section>
+            <section class="player" aria-label="Reproductor de grabaciones">
+              <div class="player-controls">
+                <button id="play" class="primary" disabled>Reproducir</button
+                ><button
+                  id="previous"
+                  class="secondary"
+                  aria-label="Paso anterior"
+                  disabled
+                >
+                  Anterior</button
+                ><button
+                  id="next"
+                  class="secondary"
+                  aria-label="Paso siguiente"
+                  disabled
+                >
+                  Siguiente</button
+                ><label class="speed-label" for="speed"
+                  >Velocidad
+                  <select id="speed">
+                    <option value="1">1x</option>
+                    <option value="2">2x</option>
+                    <option value="5">5x</option>
+                    <option value="10">10x</option>
+                    <option value="25">25x</option>
+                    <option value="100">100x</option>
+                  </select></label
+                ><button id="live" class="text-button" disabled>
+                  Volver al directo
+                </button>
+              </div>
+              <label class="timeline-label" for="position"
+                ><span id="step">Paso 0 de 0</span
+                ><span id="elapsed">00:00 / 00:00</span></label
+              ><input
+                id="position"
+                type="range"
+                min="0"
+                max="0"
+                value="0"
+                aria-label="Posición de la grabación"
+                disabled
+              />
+              <p id="playback-note" class="muted">
+                Reproduce todos los pasos registrados o avanza uno a uno.
+              </p>
+            </section>
+          </div>
+          <section class="log-panel" aria-labelledby="log-title">
+            <div class="section-heading">
+              <h2 id="log-title">Lo que hace y decide cada agente</h2>
+              <label class="log-filter"
+                >Agente
+                <select id="log-role">
+                  <option value="all">Todos</option>
+                  <option value="orquestador">Orquestador</option>
+                  <option value="planificador">Planificador</option>
+                  <option value="desarrollador_backend">Backend</option>
+                  <option value="desarrollador_frontend">Frontend</option>
+                  <option value="verificador">Verificador</option>
+                </select></label
+              >
+            </div>
+            <ol id="history"></ol>
+            <p id="empty-log" class="muted">
+              Todavía no hay pasos registrados.
+            </p>
+          </section>
+        </div>
+        <details class="technical">
+          <summary>Detalles del proceso</summary>
+          <dl>
+            <dt>Sesión</dt>
+            <dd id="session-id">—</dd>
+            <dt>Encargo</dt>
+            <dd id="run-id">—</dd>
+            <dt>Correcciones</dt>
+            <dd id="cycle">0 / 3</dd>
+            <dt>Versión revisada</dt>
+            <dd id="revision">Sin dictamen</dd>
+            <dt>Evidencia</dt>
+            <dd id="evidence">Sin evidencia comunicada</dd>
+          </dl>
+          <a href="/flow.mmd" download="agentes.mmd">Descargar Mermaid</a>
+          <h3>Eventos rechazados</h3>
+          <ul id="rejected"></ul>
+        </details>
+        <footer>
+          El visor muestra actividad y explicaciones comunicadas. Las
+          grabaciones conservan exactamente los eventos recibidos.
+        </footer>
+      </main>
+    </div>
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>

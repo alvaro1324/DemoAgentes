@@ -182,7 +182,7 @@ Los comandos reales de instalación, arranque y pruebas de la versión 0.1 está
 - Elegir versiones, motor de base de datos y uso de contenedores.
 - Confirmar si plantillas y recurrencia forman parte de una siguiente fase.
 - Elegir herramientas de pruebas Angular, extremo a extremo y CI.
-- Autenticación, paginación, prioridades, búsqueda y fechas límite quedan fuera del MVP actual, salvo acuerdo posterior.
+- Autenticación, paginación, prioridades, búsqueda en servidor y fechas límite quedan fuera del MVP actual, salvo acuerdo posterior. La búsqueda local por título solicitada el 26 de noviembre de 2026 se define en la sección 12.
 - Mantener el diseño/CLOT referenciado directamente desde `AGENTS.md`, que guía el trabajo con Codex.
 
 Las decisiones necesarias para el MVP se concretaron al implementar la versión 0.1 en [version-0.1.md](version-0.1.md). Las ampliaciones funcionales siguen pendientes de acuerdo posterior.
@@ -193,3 +193,118 @@ Las decisiones necesarias para el MVP se concretaron al implementar la versión 
 - [Validación de Symfony](https://symfony.com/doc/current/validation.html).
 - [Pruebas de repositorios Doctrine](https://symfony.com/doc/current/testing/database.html).
 - [Formularios reactivos de Angular](https://angular.dev/guide/forms/reactive-forms).
+
+## 11. Visor local del orquestador — 26 de noviembre de 2026
+
+Ampliación de herramientas solicitada por el usuario: visualizar el flujo Mermaid
+en HTML y sus estados mediante hooks, con un documento Word del proceso. No cambia
+el MVP, su modelo ni su contrato HTTP. La firma original no se extiende a esta sección.
+
+- Diseño: observador Node local en 127.0.0.1:8790, eventos JSON atómicos bajo
+  `.runtime/orchestrator-monitor/events`, actualización SSE y activos Mermaid locales.
+- Dos fuentes reales: hooks de ciclo de vida y comunicaciones explícitas del
+  orquestador. Solo estas últimas declaran estados del trabajo. Demo separada.
+- Estados: CONTEXTO, PLANIFICACION, DESARROLLO, VERIFICACION, CORRECCION,
+  APROBADO, BLOQUEADO y PLAN_ENTREGADO. Revisión inicial 0 y tres correcciones.
+- APROBADO necesita dictamen comunicado, evidencia y la misma versión que
+  VERIFICACION. El observador valida coherencia; no certifica el informe por sí mismo.
+- Aceptación: el diagrama resalta la transición recibida sin recargar; aísla
+  sesiones/encargos/demo; conserva historial al reconectar; distingue desconexión;
+  rechaza saltos, reinicio de contador y aprobaciones incoherentes. Hooks inválidos
+  no bloquean al agente ni guardan contenido de conversaciones. Word documenta
+  arquitectura, puesta en marcha, resultados ejecutados y pendientes.
+- Comprobación inicial ejecutada: 13 tests Node aislados y 9 comprobaciones Chromium sobre
+  el visor superados, sin tocar bases de datos ni ejecutar suites del MVP. Word de
+  7 páginas abierto y renderizado para inspección. Integración nativa sujeta a
+  carga y confianza de hooks en el cliente; no se presume probada por la demo.
+
+Contrato operativo, comandos y límites en [orquestador-monitor.md](orquestador-monitor.md).
+
+### 11.1. Rediseño por agentes y grabaciones — 26 de noviembre de 2026
+
+Petición posterior: simplificar el Mermaid y hacer visibles responsabilidades,
+actividad, decisiones y procesos completos reproducibles. No modifica el MVP.
+
+- Cinco cajas: orquestador coordina/decide; planificador define plan; backend
+  implementa API/datos; frontend interfaz/pruebas; verificador revisa y dictamina.
+- Actividad explícita o hooks de subagentes resaltan cajas, con paralelismo.
+  Las etapas antiguas sin agente registrado se distinguen de ejecución confirmada.
+- Log cronológico con agente, acción, resumen, detalle, decisión y evidencia
+  comunicados. Son explicaciones operativas, no lectura de razonamiento interno.
+- Cada proceso conserva todos sus eventos, incluidos rechazos, en una grabación
+  JSON local reconstruible tras reiniciar; sin recorte a 100 eventos. Descarga
+  de grabación, biblioteca, reproducir/pausar, paso anterior/siguiente, barra de
+  posición y velocidades 1x/2x/5x/10x/25x/100x. La reproducción usa tiempos reales
+  escalados y congela su captura; los eventos nuevos siguen guardándose.
+- Volver al directo recupera la última instantánea; reproducir no muta el proceso.
+  Se conserva separación real/demo y compatibilidad de eventos existentes.
+- Aceptación: una actividad identifica su caja y contenido sin recargar; dos
+  agentes paralelos se ven simultáneamente; un cierre deja de resaltar actividad;
+  rebobinar reconstruye estado y log de ese instante sin revelar eventos futuros;
+  grabaciones de más de 100 eventos sobreviven reinicio y se descargan completas;
+  velocidad y pausa funcionan; móvil accesible y desconexión diferenciada.
+- Comprobaciones previstas: Node para contrato/reconstrucción y Chromium visible
+  para navegación, actividad, grabación/reproducción, velocidad y persistencia,
+  con almacenes y servidor propios. Sin API/BD/dependencias nuevas del MVP.
+
+Estado: implementado y comprobado con 19 tests Node y 11 comprobaciones Chromium
+visible, sin errores JavaScript. Se comprobó grabación de 148 pasos, persistencia
+tras reiniciar, paralelismo, reproducción y ausencia de eventos futuros. Las
+limitaciones de carga/confianza de hooks nativos se conservan; las decisiones
+requieren que el coordinador comunique sus resúmenes operativos.
+
+## 12. Búsqueda local por título — 26 de noviembre de 2026
+
+Ampliación solicitada mediante encargo C1–C8; no se atribuye a la firma inicial
+del MVP. Plan en [plan-buscador-titulo.md](plan-buscador-titulo.md).
+
+1. Campo con etiqueta visible «Buscar por título» sobre el listado y asociado por id.
+2. Coincidencia parcial del título mientras se escribe, sin distinguir mayúsculas.
+3. Recortar solo espacios exteriores de la consulta; vacía o solo espacios no
+   restringe el conjunto del estado seleccionado. No se solicita ignorar tildes,
+   normalizar espacios interiores ni buscar en descripciones.
+4. Aplicar simultáneamente búsqueda y filtro Todas/Pendientes/Completadas.
+5. Los contadores de resumen, navegación y pestañas representan todas las tareas
+   cargadas y son independientes de búsqueda/estado; el pie cuenta las visibles.
+6. Con tareas cargadas y consulta activa sin resultados combinados, mostrar
+   «No hay tareas que coincidan con la búsqueda». Sin tareas cargadas conservar
+   el vacío inicial aplicable; sin consulta conservar también el vacío por estado.
+   La carga conserva su prioridad frente a mensajes de vacío.
+7. Botón accesible de tipo button para limpiar el texto, conservando el estado.
+8. Actualizar el listado mantiene la consulta y la aplica a los datos nuevos.
+   No se necesita persistencia entre recargas de página.
+
+Solo Angular: estado de búsqueda separado del editor, vista derivada sin mutar
+la colección completa, sin cambios de API, persistencia, modelo o dependencias.
+Comprobación: eventos DOM de componente para C1–C8, con tres pendientes
+y una completada y respuestas actualizadas distintas; formato, Vitest y build
+mediante el script existente. Revisión independiente con versión identificada.
+
+Estado: implementación Angular y seis pruebas nuevas de componente materializadas
+a partir del parche del desarrollador frontend. Formato, 20 tests del frontend
+y build superados. Dictamen de la revisión independiente y límites de ejecución
+en la bitácora y en `revision-buscador-titulo.md`. No se extiende la búsqueda al servidor.
+
+## 13. Mejoras de interacción de tareas — encargo del 26 de noviembre de 2026
+
+Estado: implementación autorizada por el usuario y materializada; comprobaciones y dictamen independiente registrados en la bitácora. Complementa la búsqueda existente y conserva sus reglas.
+
+Alcance: exclusivamente la interfaz Angular y sus pruebas. No cambia el contrato HTTP ni el modelo persistente.
+
+### Decisiones
+
+- El orden se aplica localmente al resultado de la búsqueda y del filtro de estado, sin modificar la colección recibida. Las opciones son más recientes (predeterminada, por fecha de creación descendente), más antiguas (fecha de creación ascendente) y título A–Z (comparación lingüística en español, sin distinguir mayúsculas). Los empates se resuelven de forma determinista por identificador. Cambiar de orden conserva búsqueda y filtro.
+- El editor compara sus valores actuales de título y descripción con los valores al abrirlo. Solo solicita confirmación de descarte cuando existen diferencias. Cancelar conserva el editor y sus valores. Confirmar permite cerrar o sustituir el formulario. También se protege cualquier acción existente que oculte el editor para mostrar un detalle. Se conserva el bloqueo durante el guardado.
+- La lista vacía requiere una carga correcta previa y ninguna carga o error activo. Un error de actualización conserva la colección ya cargada y muestra el error; un fallo inicial no se presenta como lista vacía.
+- Título y descripción muestran sus caracteres utilizados y su máximo vigente, incluidos los valores precargados. Los límites actuales son 200 y 5000 caracteres respectivamente.
+- Al abrir o sustituir el editor, el foco pasa al título una vez renderizado. Al cerrarlo, incluido el guardado correcto, vuelve al botón que lo abrió cuando este siga disponible. Cancelar un descarte no abandona el editor. Si el botón desaparece por los filtros o la búsqueda, se utiliza un control disponible y lógico como alternativa.
+
+### Criterios de aceptación
+
+- MT1: las tres opciones de orden producen el resultado esperado y conservan búsqueda y filtro; el orden predeterminado es más recientes.
+- MT2: cerrar o sustituir un editor modificado solicita confirmación; cancelar conserva los datos y confirmar permite continuar. Abrir y cerrar sin cambios, o revertir todos los cambios, no solicita confirmación.
+- MT3: el fallo inicial muestra el error sin mensaje de lista vacía; una respuesta correcta vacía permite mostrarlo.
+- MT4: una actualización fallida mantiene las tareas previamente cargadas y permite reintentar; una respuesta posterior correcta actualiza la lista.
+- MT5: ambos contadores se actualizan con la edición y reflejan los valores iniciales y los límites vigentes.
+- MT6: el título recibe el foco al abrir el editor y el cierre devuelve el foco al origen disponible, con alternativa cuando haya desaparecido.
+- MT7: las pruebas existentes de búsqueda, filtros y operaciones continúan pasando; se añaden comprobaciones de los comportamientos afectados.

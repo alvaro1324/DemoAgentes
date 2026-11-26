@@ -8,8 +8,8 @@ Se añaden dos agentes del proyecto, además del planificador existente:
 | `desarrollador_frontend` | [desarrollador_frontend.toml](../.codex/agents/desarrollador_frontend.toml) | Tipos, servicios HTTP, formularios, interfaz y pruebas en `frontend/` |
 
 El [orquestador](orquestador.md) coordina los encargos cuando se solicita; el
-verificador sigue pendiente. Estos desarrolladores no crean ni invocan otros
-agentes. El [planificador](planificador.md) sigue terminando al entregar
+[verificador](verificador.md) revisa las entregas. Estos desarrolladores no crean
+ni invocan otros agentes. El [planificador](planificador.md) sigue terminando al entregar
 el plan; no lanza automáticamente a los desarrolladores.
 
 ## Encargo y entrega
@@ -23,6 +23,13 @@ El resultado de cada rol incluye archivos modificados, criterios cubiertos,
 contrato usado, comprobaciones ejecutadas con su resultado y limitaciones. Sus
 pruebas son comprobaciones del propio trabajo; no sustituyen una revisión
 independiente ni autorizan commits o publicaciones.
+
+En el bucle coordinado reciben del orquestador los hallazgos de verificador,
+con id, criterio, evidencia y ciclo. Corrigen solo su tramo y devuelven por
+hallazgo los cambios, pruebas y pendientes. Una discrepancia se argumenta con
+evidencia; no cambian los criterios ni se autoaprueban. El orquestador mantiene
+un contador global de hasta tres ciclos de corrección y nueva revisión tras
+la revisión inicial. El desarrollador no lo reinicia ni invoca al revisor.
 
 Si falta una decisión que afecta comportamiento o contrato, pregunta antes de
 implementar esa parte. Puede continuar las partes independientes. No modifica

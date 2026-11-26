@@ -1,5 +1,9 @@
 # Decisiones y contrato de la versión 0.1
 
+Herramienta de desarrollo incorporada el 26 de noviembre de 2026: [visor local
+del orquestador con hooks](orquestador-monitor.md), separado del MVP y sus datos.
+No altera las versiones o contratos de aplicación descritos aquí.
+
 Implementación del MVP aprobado, iniciada a petición del usuario el 24 de noviembre de 2026. Este documento concreta las decisiones que el análisis dejaba abiertas; el historial está en `bitacora.md`.
 
 ## Plataforma seleccionada
@@ -60,6 +64,23 @@ Errores JSON con `code`, `message` y `errors` (array de field/message). Códigos
 
 ## Pruebas y límites
 
+### Búsqueda local por título (26 de noviembre de 2026)
+
+La interfaz incorpora «Buscar por título» sobre las tareas cargadas. Busca
+fragmentos del título sin distinguir mayúsculas y recorta los espacios exteriores
+de la consulta; combina el resultado con Todas/Pendientes/Completadas. La búsqueda
+vacía conserva todas las tareas del estado seleccionado. El botón «Limpiar búsqueda»
+vacía el campo sin cambiar de estado. Actualizar mantiene el texto y filtra los
+datos nuevos; recargar la página inicia una búsqueda vacía.
+
+Los contadores de resumen, navegación y pestañas siguen siendo globales. El pie
+cuenta las tareas visibles. Una consulta activa sin resultados y con tareas
+cargadas muestra «No hay tareas que coincidan con la búsqueda». El vacío inicial
+y el vacío por estado sin consulta conservan sus mensajes. Se mantiene la carga
+por delante de los mensajes vacíos. Solo afecta Angular: API, modelo y dependencias
+mantienen el contrato y alcance anteriores. Plan y criterios en
+[plan-buscador-titulo.md](plan-buscador-titulo.md), diseño sección12.
+
 Pruebas de entidad, persistencia y API con PHPUnit; formularios, filtros, fallos y servicio HTTP con Vitest; recorrido completo y validación móvil con Playwright/Chromium. Bases de pruebas separadas de la base de uso local y servidores E2E separados del entorno de desarrollo.
 
 Los comandos y los requisitos se mantienen en el README. El resumen de resultados efectivamente ejecutados se añade a la bitácora al finalizar la verificación. El workflow de GitHub Actions no implica que ya se haya ejecutado CI en remoto.
@@ -69,3 +90,9 @@ No se incluyen autenticación, plantillas, recurrencia, paginación, prioridades
 Auditoría de dependencias realizada: Composer no notificó avisos; `npm audit --omit=dev` devolvió cero vulnerabilidades. La auditoría completa npm encontró 16 avisos moderados transitivos en las herramientas de Angular CLI (glob/minimatch), pendientes de un parche compatible. No se aplicó la sugerencia incompatible de cambiar de versión mayor de CLI.
 
 Referencias: [Symfony LTS](https://symfony.com/releases/7.4), [Doctrine en Symfony](https://symfony.com/doc/7.4/doctrine.html), [compatibilidad de Angular](https://angular.dev/reference/versions).
+
+### Mejoras de interacción del 26 de noviembre de 2026
+
+Angular aplica orden local por `createdAt` descendente (predeterminado), `createdAt` ascendente o título A–Z al resultado combinado de búsqueda y filtro. Esta presentación no modifica el orden por identificador descendente definido para la respuesta del servidor ni introduce parámetros HTTP.
+
+El editor confirma el descarte de valores modificados, muestra los contadores de título y descripción y gestiona el foco de apertura y cierre. La lista distingue una respuesta correcta vacía de un error de carga y conserva las tareas disponibles cuando falla una actualización. Alcance y criterios MT1–MT7 en la sección 13 de `docs/analisis-diseño.md`.

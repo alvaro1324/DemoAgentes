@@ -1,5 +1,28 @@
 # Handoff de DemoAgentes 0.1
 
+Visor rediseñado por agentes y grabaciones (26 de noviembre de 2026): cinco cajas
+Mermaid, log de acciones/decisiones, reproducción con pausa/pasos/velocidad y
+grabaciones JSON completas automáticas en `.runtime/orchestrator-monitor/events/recordings`.
+Guía vigente en `docs/orquestador-monitor.md`; el Word existente es histórico de
+la primera versión. Los eventos anteriores sin actividad conservan sus etapas,
+sin inventar agentes en ejecución. No cambia la aplicación ni sus dependencias.
+
+Buscador local por título (26 de noviembre de 2026): plan en
+`docs/plan-buscador-titulo.md`, criterios C1–C8 en diseño sección12. Cambios
+acotados a `frontend/src/app/app.{ts,html,css,spec.ts}`; control reactivo separado
+del editor, vista derivada, contadores globales y búsqueda conservada al actualizar.
+Plan y parche de roles nativos con acceso a archivos/comandos asistido por el
+padre debido a la falta de herramientas de las instancias. Resultados de pruebas
+y revisión independiente: consultar las entradas recientes de la bitácora.
+
+Actualización del 26 de noviembre de 2026: visor local del orquestador en
+`tools/orchestrator-monitor`, hooks en `.codex/hooks.json`, guía en
+`docs/orquestador-monitor.md` y proceso en `docs/proceso-orquestador-monitor.docx`.
+Pruebas propias: 13 casos Node y 9 comprobaciones Chromium superadas; Word de
+7 páginas abierto y renderizado con Microsoft Word. La carga/confianza de hooks
+y un encargo delegado nativo completo siguen pendientes en nueva sesión.
+No confundir la demostración con ejecución real ni con revisión independiente.
+
 Estado local comprobado el 24 de noviembre de 2026 (Europe/Madrid). Esta es una guía de reanudación; el historial único continúa en `docs/bitacora.md`.
 
 ## Objetivo y estado actual
@@ -51,8 +74,11 @@ También se añaden `desarrollador_backend` y `desarrollador_frontend` en
 resuelto, archivos disjuntos y escritor único del registro compartido. Consultar
 `docs/agentes-desarrollo.md`. Se añade `orquestador` en `.codex/agents/orquestador.toml`
 para coordinar encargos, dependencias, documentación y comprobaciones; consultar
-`docs/orquestador.md`. El verificador sigue pendiente. Solicitar solo un plan no
-activa implementación. La selección nativa del orquestador sigue sin ensayar;
+`docs/orquestador.md`. Se define `verificador` en `.codex/agents/verificador.toml`,
+con dictámenes APROBADO/REVISAR y sin corregir código. El orquestador coordina una
+revisión inicial y hasta tres ciclos de corrección y nueva revisión; termina
+APROBADO o entrega BLOQUEADO. Contrato en `docs/verificador.md`. Solicitar solo un plan no
+activa implementación. La selección nativa del flujo sigue sin ensayar;
 los resultados de comprobaciones se registran en
 `docs/bitacora.md`.
 

@@ -3,7 +3,8 @@
 Configuración del proyecto: [planificador.toml](../.codex/agents/planificador.toml).
 Es el agente que prepara los planes de esta arquitectura. Los dos agentes de
 desarrollo se documentan en [agentes-desarrollo.md](agentes-desarrollo.md);
-el [orquestador](orquestador.md) coordina encargos y el verificador sigue pendiente.
+el [orquestador](orquestador.md) coordina encargos y el [verificador](verificador.md)
+revisa las entregas de desarrollo.
 El planificador no los lanza.
 
 ## Uso

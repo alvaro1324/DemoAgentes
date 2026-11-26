@@ -24,7 +24,14 @@
           <h1>Un paso cada vez.</h1>
           <p class="subtitle">Organiza lo que importa y deja espacio para lo demás.</p>
         </div>
-        <button class="primary" (click)="openEditor()" [disabled]="saving()">＋ Nueva tarea</button>
+        <button
+          class="primary"
+          #newTaskButton
+          (click)="openEditor(undefined, $event)"
+          [disabled]="saving()"
+        >
+          ＋ Nueva tarea
+        </button>
       </div>
       <section class="stats" aria-label="Resumen de tareas">
         <div class="stat">
@@ -65,13 +72,17 @@
           <form [formGroup]="form" (ngSubmit)="save()">
             <label for="task-title">Título <span aria-hidden="true">*</span></label>
             <input
+              #titleInput
               id="task-title"
               formControlName="title"
               placeholder="¿Qué quieres hacer?"
               maxlength="200"
               [attr.aria-invalid]="form.controls.title.touched && form.controls.title.invalid"
-              aria-describedby="title-error"
+              aria-describedby="title-error title-count"
             />
+            <p id="title-count" class="character-count">
+              Título: {{ form.controls.title.value.length }} / 200 caracteres
+            </p>
             <p id="title-error" class="field-error">
               @if (form.controls.title.touched && form.controls.title.invalid) {
                 Escribe un título de entre 1 y 200 caracteres, con algún carácter distinto de
@@ -87,8 +98,11 @@
               placeholder="Añade los detalles que necesites recordar…"
               rows="3"
               maxlength="5000"
-              aria-describedby="description-error"
+              aria-describedby="description-error description-count"
             ></textarea>
+            <p id="description-count" class="character-count">
+              Descripción: {{ form.controls.description.value.length }} / 5000 caracteres
+            </p>
             <p id="description-error" class="field-error">
               @if (form.controls.description.invalid) {
                 La descripción admite hasta 5.000 caracteres.
@@ -115,6 +129,28 @@
             {{ loading() ? 'Cargando…' : 'Actualizar' }}
           </button>
         </div>
+        <div class="task-search">
+          <div class="task-search-field">
+            <label for="task-title-search">Buscar por título</label>
+            <input id="task-title-search" type="search" [formControl]="searchControl" />
+          </div>
+          <button
+            type="button"
+            class="secondary"
+            (click)="searchControl.setValue('')"
+            [disabled]="searchControl.value.length === 0"
+          >
+            Limpiar búsqueda
+          </button>
+        </div>
+        <div class="task-order">
+          <label for="task-order">Ordenar por</label>
+          <select id="task-order" [value]="order()" (change)="setOrder($event)">
+            <option value="newest">Más recientes</option>
+            <option value="oldest">Más antiguas</option>
+            <option value="title">Título A–Z</option>
+          </select>
+        </div>
         <div class="tabs" aria-label="Filtrar tareas">
           @for (tab of filters; track tab.value) {
             <button
@@ -138,7 +174,15 @@
             <span class="empty-icon">◷</span>
             <h3>Buscando tus tareas…</h3>
           </div>
-        } @else if (visibleTasks().length === 0) {
+        } @else if (
+          loaded() && !error() && visibleTasks().length === 0 && tasks().length > 0 && searchQuery()
+        ) {
+          <div class="empty">
+            <span class="empty-icon">⌕</span>
+            <h3>No hay tareas que coincidan con la búsqueda</h3>
+            <p>Prueba otro título, limpia la búsqueda o cambia el filtro de estado.</p>
+          </div>
+        } @else if (loaded() && !error() && visibleTasks().length === 0) {
           <div class="empty">
             <span class="empty-icon">✓</span>
             <h3>
@@ -154,7 +198,9 @@
               }}
             </p>
             @if (filter() === 'all') {
-              <button class="secondary" (click)="openEditor()">Crear mi primera tarea</button>
+              <button class="secondary" (click)="openEditor(undefined, $event)">
+                Crear mi primera tarea
+              </button>
             }
           </div>
         } @else {
@@ -177,7 +223,7 @@
                 <button
                   class="task-summary"
                   (click)="showDetail(task)"
-                  [disabled]="detailLoading()"
+                  [disabled]="detailLoading() || saving()"
                 >
                   <strong>{{ task.title }}</strong>
                   @if (task.description) {
@@ -192,7 +238,7 @@
                   <button
                     class="text-button"
                     [attr.aria-label]="'Editar: ' + task.title"
-                    (click)="openEditor(task)"
+                    (click)="openEditor(task, $event)"
                     [disabled]="saving()"
                   >
                     Editar</button
@@ -234,7 +280,7 @@
             <dt>Última modificación</dt>
             <dd>{{ task.updatedAt | date: 'dd/MM/yyyy HH:mm' }}</dd>
           </dl>
-          <button class="secondary" (click)="openEditor(task)">Editar tarea</button>
+          <button class="secondary" (click)="openEditor(task, $event)">Editar tarea</button>
         </section>
       }
       @if (deleteTarget(); as task) {

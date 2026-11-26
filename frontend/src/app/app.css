@@ -217,6 +217,20 @@ h1 {
   margin: 0;
   font-weight: 750;
 }
+.task-search {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 12px;
+  padding: 0 25px 18px;
+}
+.task-search-field {
+  flex: 1 1 220px;
+  min-width: 0;
+}
+.task-search button {
+  max-width: 100%;
+}
 .tabs {
   display: flex;
   gap: 21px;
@@ -596,4 +610,29 @@ dd {
   dd {
     margin-bottom: 8px;
   }
+}
+.task-order {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+  margin-block: 1rem;
+}
+.task-order select {
+  max-width: 100%;
+  padding: 0.65rem;
+  font: inherit;
+  color: inherit;
+  background: white;
+  border: 1px solid #64748b;
+  border-radius: 0.5rem;
+}
+.task-order select:focus-visible {
+  outline: 3px solid #2563eb;
+  outline-offset: 2px;
+}
+.character-count {
+  margin: 0.25rem 0;
+  font-size: 0.8rem;
+  text-align: right;
 }

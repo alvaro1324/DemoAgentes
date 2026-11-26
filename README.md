@@ -2,6 +2,15 @@
 
 Aplicación de lista de tareas con API Symfony, Doctrine y Angular. Permite crear, consultar, editar, completar, reabrir, eliminar y filtrar tareas. La interfaz está en español y se adapta a móvil y escritorio.
 
+El campo **Buscar por título** busca fragmentos sin distinguir mayúsculas ni
+espacios exteriores y se combina con el estado seleccionado. **Limpiar búsqueda**
+restaura las tareas de ese estado. Los contadores siguen siendo globales; la
+búsqueda se conserva al actualizar el listado y se vacía al recargar la página.
+
+
+La lista permite combinar búsqueda, filtro por estado y orden por más recientes, más antiguas o título A–Z. El orden se aplica en el navegador; más recientes es la opción inicial.
+
+El editor muestra los contadores de título y descripción y pide confirmación antes de descartar cambios. Al abrirlo enfoca el título y, al cerrarlo, devuelve el foco al botón de origen cuando está disponible. Si una actualización falla, conserva las tareas cargadas y muestra el error; un fallo inicial no se presenta como una lista vacía.
 ## Entorno
 
 La versión se ha comprobado en Windows con PHP 8.4.28, Symfony 7.4.23 LTS, Doctrine ORM 3.8.0, SQLite, Node 20.19.0 y Angular 21.2. Los detalles resueltos están en `backend/composer.lock` y `frontend/package-lock.json`.
@@ -94,3 +103,14 @@ No incluye cuentas de usuario, plantillas, recurrencia ni paginación.
 - [Handoff para otro chat](docs/handoff.md).
 
 Los documentos antiguos de orquestación y reservas permanecen como referencias pendientes de adaptación; no describen la implementación 0.1.
+## Visor del orquestador
+
+El [visor local con Mermaid y hooks](docs/orquestador-monitor.md) permite seguir
+estados, ciclos y agentes. Desde la raíz: `npm --prefix tools/orchestrator-monitor ci`
+y `npm --prefix tools/orchestrator-monitor start`. Abrir <http://127.0.0.1:8790>.
+El modo demostración se inicia con `npm --prefix tools/orchestrator-monitor run demo`.
+El documento Word del proceso está en `docs/proceso-orquestador-monitor.docx`.
+El visor actual identifica los cinco agentes, muestra acciones y decisiones y
+guarda los procesos como grabaciones completas. Permite reproducir, pausar,
+avanzar por pasos, acelerar hasta 100x y descargar cada grabación. El Word
+corresponde a la primera versión; la guía enlazada describe el rediseño vigente.

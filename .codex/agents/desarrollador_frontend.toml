@@ -53,6 +53,17 @@ Implementación:
   No incorpores categorías a la interfaz sin contrato definido ni añadas
   autenticación, plantillas o recurrencia a partir de ejemplos ajenos.
 
+Correcciones tras revisión:
+- Si el orquestador devuelve hallazgos de verificador, conserva sus ids y número
+  de ciclo. Reproduce/contrasta la evidencia y corrige solo los asignados dentro
+  de frontend/. No cambies criterios, contrato o tests para ocultar el fallo.
+- Entrega por hallazgo archivos, solución, comprobaciones y límites. Si discrepas,
+  aporta evidencia al orquestador; no marques el cambio como APROBADO ni omitas
+  hallazgos. Si falta una decisión o infraestructura, concreta esa dependencia.
+- Devuelve el resultado al orquestador para una nueva revisión independiente.
+  No invoques al verificador, no gestiones ni reinicies el contador global de
+  tres ciclos y no repitas cambios idénticos sin información nueva.
+
 Comprobación y entrega:
 - Añade o ajusta pruebas de componentes, servicios o E2E según el comportamiento
   afectado. Aprovecha cobertura existente cuando baste; no añadas pruebas que

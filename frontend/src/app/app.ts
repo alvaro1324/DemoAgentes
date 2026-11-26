@@ -1,9 +1,22 @@
 import { DatePipe } from '@angular/common';
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import {
+  afterNextRender,
+  Component,
+  computed,
+  ElementRef,
+  inject,
+  Injector,
+  OnInit,
+  signal,
+  viewChild,
+} from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { finalize } from 'rxjs';
 import { Task, TaskFilter } from './models/task';
 import { errorMessage, TaskService } from './services/task.service';
+
+type TaskOrder = 'newest' | 'oldest' | 'title';
 
 @Component({
   selector: 'app-root',
@@ -13,9 +26,20 @@ import { errorMessage, TaskService } from './services/task.service';
 })
 export class App implements OnInit {
   private readonly api = inject(TaskService);
+  private readonly injector = inject(Injector);
+  private readonly titleInput = viewChild<ElementRef<HTMLInputElement>>('titleInput');
+  private readonly newTaskButton = viewChild<ElementRef<HTMLButtonElement>>('newTaskButton');
+  private editorOrigin: HTMLElement | null = null;
+  private initialValues = { title: '', description: '' };
+  private detailRequest = 0;
   readonly tasks = signal<Task[]>([]);
   readonly filter = signal<TaskFilter>('all');
+  readonly order = signal<TaskOrder>('newest');
+  readonly searchControl = new FormControl('', { nonNullable: true });
+  private readonly searchText = toSignal(this.searchControl.valueChanges, { initialValue: '' });
+  readonly searchQuery = computed(() => this.searchText().trim().toLowerCase());
   readonly loading = signal(false);
+  readonly loaded = signal(false);
   readonly saving = signal(false);
   readonly detailLoading = signal(false);
   readonly busyId = signal<number | null>(null);
@@ -27,11 +51,24 @@ export class App implements OnInit {
   readonly deleteTarget = signal<Task | null>(null);
   readonly pendingCount = computed(() => this.tasks().filter((t) => !t.isCompleted).length);
   readonly completedCount = computed(() => this.tasks().filter((t) => t.isCompleted).length);
-  readonly visibleTasks = computed(() =>
-    this.tasks().filter(
-      (t) => this.filter() === 'all' || t.isCompleted === (this.filter() === 'completed'),
-    ),
-  );
+  readonly visibleTasks = computed(() => {
+    const order = this.order();
+    return this.tasks()
+      .filter(
+        (t) =>
+          (this.filter() === 'all' || t.isCompleted === (this.filter() === 'completed')) &&
+          t.title.toLowerCase().includes(this.searchQuery()),
+      )
+      .sort((a, b) => {
+        const comparison =
+          order === 'title'
+            ? a.title.localeCompare(b.title, 'es', { sensitivity: 'base' })
+            : order === 'oldest'
+              ? Date.parse(a.createdAt) - Date.parse(b.createdAt)
+              : Date.parse(b.createdAt) - Date.parse(a.createdAt);
+        return comparison || a.id - b.id;
+      });
+  });
   readonly filters: { value: TaskFilter; label: string }[] = [
     { value: 'all', label: 'Todas' },
     { value: 'pending', label: 'Pendientes' },
@@ -58,20 +95,67 @@ export class App implements OnInit {
       .list()
       .pipe(finalize(() => this.loading.set(false)))
       .subscribe({
-        next: (tasks) => this.tasks.set(tasks),
+        next: (tasks) => {
+          this.tasks.set(tasks);
+          this.loaded.set(true);
+        },
         error: (err: unknown) => this.error.set(errorMessage(err)),
       });
   }
-  openEditor(task?: Task): void {
+  setOrder(event: Event): void {
+    const value = (event.target as HTMLSelectElement).value;
+    if (value === 'newest' || value === 'oldest' || value === 'title') {
+      this.order.set(value);
+    }
+  }
+  openEditor(task?: Task, event?: Event): void {
+    if (this.saving() || !this.canDiscardEditor()) return;
+    this.detailRequest++;
+    this.detailLoading.set(false);
+    const origin = event?.currentTarget;
+    this.editorOrigin =
+      origin instanceof HTMLElement
+        ? origin
+        : this.editorOpen()
+          ? this.editorOrigin
+          : document.activeElement instanceof HTMLElement
+            ? document.activeElement
+            : null;
     this.editingId.set(task?.id ?? null);
-    this.form.reset({ title: task?.title ?? '', description: task?.description ?? '' });
+    this.initialValues = { title: task?.title ?? '', description: task?.description ?? '' };
+    this.form.reset(this.initialValues);
     this.editorOpen.set(true);
     this.error.set('');
     this.notice.set('');
     this.selected.set(null);
+    afterNextRender(() => this.titleInput()?.nativeElement.focus(), { injector: this.injector });
   }
   closeEditor(): void {
-    if (!this.saving()) this.editorOpen.set(false);
+    if (this.saving() || !this.canDiscardEditor()) return;
+    this.editorOpen.set(false);
+    this.restoreEditorFocus();
+  }
+  private canDiscardEditor(): boolean {
+    if (!this.editorOpen()) return true;
+    const values = this.form.getRawValue();
+    return (
+      (values.title === this.initialValues.title &&
+        values.description === this.initialValues.description) ||
+      window.confirm('Hay cambios sin guardar. ¿Quieres descartarlos?')
+    );
+  }
+  private restoreEditorFocus(): void {
+    const origin = this.editorOrigin;
+    afterNextRender(
+      () => {
+        if (origin?.isConnected && !origin.matches(':disabled')) {
+          origin.focus();
+        } else {
+          this.newTaskButton()?.nativeElement.focus();
+        }
+      },
+      { injector: this.injector },
+    );
   }
   save(): void {
     this.form.markAllAsTouched();
@@ -89,6 +173,7 @@ export class App implements OnInit {
         );
         this.editorOpen.set(false);
         this.notice.set(id === null ? 'Tarea creada.' : 'Cambios guardados.');
+        this.restoreEditorFocus();
       },
       error: (err: unknown) => this.error.set(errorMessage(err)),
     });
@@ -112,18 +197,28 @@ export class App implements OnInit {
       });
   }
   showDetail(task: Task): void {
-    if (this.detailLoading()) return;
+    if (this.saving() || this.detailLoading() || !this.canDiscardEditor()) return;
+    const request = ++this.detailRequest;
+    if (this.editorOpen()) {
+      this.editorOpen.set(false);
+      this.restoreEditorFocus();
+    }
     this.detailLoading.set(true);
     this.error.set('');
     this.api
       .get(task.id)
-      .pipe(finalize(() => this.detailLoading.set(false)))
+      .pipe(
+        finalize(() => {
+          if (request === this.detailRequest) this.detailLoading.set(false);
+        }),
+      )
       .subscribe({
         next: (detail) => {
-          this.selected.set(detail);
-          this.editorOpen.set(false);
+          if (request === this.detailRequest) this.selected.set(detail);
         },
-        error: (err: unknown) => this.error.set(errorMessage(err)),
+        error: (err: unknown) => {
+          if (request === this.detailRequest) this.error.set(errorMessage(err));
+        },
       });
   }
   confirmDelete(): void {

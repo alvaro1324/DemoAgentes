@@ -13,10 +13,15 @@ y [`desarrollador_frontend`](../.codex/agents/desarrollador_frontend.toml) imple
 los tramos asignados de `backend/` y `frontend/`. Su coordinación por contrato,
 límites y ensayos se documentan en [agentes-desarrollo.md](agentes-desarrollo.md).
 El [`orquestador`](../.codex/agents/orquestador.toml) coordina los encargos y la
-integración; uso y límites en [orquestador.md](orquestador.md). El verificador
-sigue pendiente. Definir los roles no activa automáticamente el flujo completo
+integración; uso y límites en [orquestador.md](orquestador.md). El
+[`verificador`](../.codex/agents/verificador.toml) revisa sin corregir y devuelve
+`APROBADO` o `REVISAR`. El flujo vigente de DemoAgentes realiza una revisión inicial
+y hasta tres ciclos globales de corrección y nueva revisión (máximo cuatro
+revisiones), o entrega `BLOQUEADO` con evidencias. El contrato, estados y criterios
+están en [verificador.md](verificador.md); prevalecen sobre las ambigüedades del
+diagrama histórico inferior. Definir los roles no acredita su ejecución nativa
 ni autoriza commits o publicaciones. Las comprobaciones propias del orquestador
-y los desarrolladores no constituyen revisión independiente.
+y los desarrolladores no sustituyen el dictamen independiente.
 
 El resto de este documento se conserva como referencia histórica de reservas de
 salas. Sus rutas, scripts `probar-*.ps1`, mapeos y flujo de publicación no definen

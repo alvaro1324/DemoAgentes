@@ -136,8 +136,17 @@ registro, cada desarrollador le devuelve su resumen y el padre lo incorpora.
 En ejecución autónoma se mantiene el registro directo conforme a `bitacora`.
 Sus comprobaciones propias no constituyen una revisión independiente. No crean
 otros agentes ni realizan commits o publicaciones. Uso y ensayos en
-[`docs/agentes-desarrollo.md`](docs/agentes-desarrollo.md). El verificador sigue
-pendiente.
+[`docs/agentes-desarrollo.md`](docs/agentes-desarrollo.md). Devuelven las
+correcciones por identificador al orquestador para nueva revisión del verificador.
+
+## Agente verificador
+
+`verificador` se define en `.codex/agents/verificador.toml`. Revisa alcance,
+contrato, diff y pruebas autorizadas y devuelve `APROBADO` o `REVISAR` con criterios,
+hallazgos y evidencias. No corrige código, pruebas ni configuración, no delega
+y no publica. En coordinación devuelve su informe al orquestador para el registro
+centralizado; en uso autónomo actualiza la bitácora conforme al skill.
+Contrato y ensayos en [`docs/verificador.md`](docs/verificador.md).
 
 ## Agente orquestador
 
@@ -148,8 +157,12 @@ con el plan; la implementación requiere estar incluida en el encargo.
 
 Centraliza la bitácora de los desarrolladores y espera el registro propio del
 planificador antes de escribir en ella. El paralelismo exige contrato resuelto,
-archivos disjuntos y recursos de pruebas compatibles. No sustituye al verificador
-pendiente ni publica sin encargo. Uso, límites y ensayos en
+archivos disjuntos y recursos de pruebas compatibles. Coordina una revisión
+inicial y hasta tres ciclos globales de corrección y nueva revisión independiente
+con verificador (máximo cuatro revisiones). Solo cierra como `APROBADO` con un
+dictamen vigente; si se agota el límite o falta una condición necesaria entrega
+`BLOQUEADO` con evidencias y pendientes. No sustituye al verificador ni publica
+sin encargo. Uso, límites y ensayos en
 [`docs/orquestador.md`](docs/orquestador.md). Definir el rol no acredita que una
 sesión existente lo exponga; comprobar disponibilidad antes de invocarlo.
 

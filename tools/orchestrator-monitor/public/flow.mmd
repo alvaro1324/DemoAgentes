@@ -1,0 +1,11 @@
+flowchart TB
+  orquestador["Orquestador<br/>Coordina y decide"]
+  planificador["Planificador<br/>Define el plan"]
+  desarrollador_backend["Backend<br/>API, datos y pruebas"]
+  desarrollador_frontend["Frontend<br/>Interfaz y pruebas"]
+  verificador["Verificador<br/>Revisa y emite dictamen"]
+  orquestador --> planificador
+  planificador --> desarrollador_backend
+  planificador --> desarrollador_frontend
+  desarrollador_backend --> verificador
+  desarrollador_frontend --> verificador

@@ -1,0 +1,15 @@
+{
+  "name": "demoagentes-orchestrator-monitor",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node server.mjs",
+    "demo": "node demo.mjs",
+    "test": "node --test test/events.test.mjs",
+    "test:browser": "node test/browser.mjs",
+    "word": "node make-word.mjs"
+  },
+  "dependencies": { "mermaid": "11.12.2" },
+  "devDependencies": { "docx": "9.5.1", "jszip": "3.10.1" }
+}
